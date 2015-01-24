@@ -9,10 +9,10 @@ namespace ShuttleServiceManagementSystem.Models
 {
     public class LoginModel
     {
-        [Required]
-        public string userName { get; set; };
+        [Required(ErrorMessage = "The Username field is required!")]
+        public string userName { get; set; }
 
-        [Required]
-        public string password { get; set; };
+        [Required(ErrorMessage = "The Password field is required!")]
+        public string password { get; set; }
     }
 }
