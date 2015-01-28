@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using ShuttleServiceManagementSystem.Models;
 using ShuttleServiceManagementSystem.Utilities;
+using System.Web.Security;
 
 
 namespace ShuttleServiceManagementSystem.Controllers
@@ -12,7 +13,7 @@ namespace ShuttleServiceManagementSystem.Controllers
   
     public class LoginController : Controller
     {
-        public Database_Helper db = new Database_Helper();
+        public SSMS_Helper ssms = new SSMS_Helper();
 
         // Method invoked on first page load
         [HttpGet]
@@ -35,19 +36,33 @@ namespace ShuttleServiceManagementSystem.Controllers
                 // Collect the username and password inputs from the model
                 if (model.userName != null && model.userName != "")
                 {
-                    username = model.userName;
+                    username = model.userName.Trim();
                 }
 
                 if (model.password != null && model.password != "")
                 {
-                    password = model.password;
+                    password = model.password.Trim();
                 }
 
                 // Validate the username/password in the database
+                if (ssms.IsValidLogin(username, password))
+                {
+                    // Create session variables to hold user specific values
+                    Session["username"] = username;
+                    Session["accessLevel"] = ssms.GetUserAccessLevel(username);
 
+                    // Set an authorization cookie for this user
+                    FormsAuthentication.SetAuthCookie(username, false);
 
-                // Redirect the user to the home page
-                return RedirectToAction("index", "home");
+                    // Redirect the user to the home page
+                    return RedirectToAction("index", "home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Username or password does not exist!");
+                }
+
+                
 
             }
             

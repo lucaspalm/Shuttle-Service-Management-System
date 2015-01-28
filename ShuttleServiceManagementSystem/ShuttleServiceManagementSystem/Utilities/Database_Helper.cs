@@ -18,31 +18,7 @@ namespace ShuttleServiceManagementSystem.Utilities
     {
         public string GetConnString()
         {
-            return "Data Source=edgeofthemists.net;Initial Catalog=SDSU_School;Integrated Security=False;User ID=XXX;Password=XXX";
-        }
-
-        public string ReturnDataRowValue(DataRow Row, string FieldName)
-        {
-            if (Row[FieldName] != null)
-            {
-                return Row[FieldName].ToString();
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        public string ReturnTableValue(DataTable TableName, int RowNumber, string FieldName)
-        {
-            if (TableName.Rows[RowNumber][FieldName] != null)
-            {
-                return TableName.Rows[RowNumber][FieldName].ToString();
-            }
-            else
-            {
-                return "";
-            }
+            return "Data Source=edgeofthemists.net;Initial Catalog=SDSU_School;Integrated Security=False;User ID=4Moxie;Password=jacks";
         }
 
         public string ReturnSQLFirstValue(string query)
@@ -75,8 +51,8 @@ namespace ShuttleServiceManagementSystem.Utilities
                 }
                 finally
                 {
-                    //reader.Dispose();
-                    //cmd.Dispose();
+                    reader.Dispose();
+                    cmd.Dispose();
                     conn1.Close();
                 }
 
