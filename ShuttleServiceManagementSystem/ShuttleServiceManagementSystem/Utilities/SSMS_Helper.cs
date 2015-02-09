@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ShuttleServiceManagementSystem.Utilities
 {
@@ -46,6 +48,28 @@ namespace ShuttleServiceManagementSystem.Utilities
 
             // Return the query result
             return queryResult;
+        }
+
+        public void CreateSystemLog(string username)
+        {
+
+        }
+
+        public string CreateSalt()
+        {
+            var rng = new RNGCryptoServiceProvider();
+            var buff = new byte[10];
+            rng.GetBytes(buff);
+            return Convert.ToBase64String(buff);
+        }
+
+        public string CreateHash(string password, string salt)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(password + salt);
+            SHA256Managed sha256hashString = new SHA256Managed();
+            byte[] hashValue = sha256hashString.ComputeHash(bytes);
+
+            return hashValue.ToString();
         }
     }
 }

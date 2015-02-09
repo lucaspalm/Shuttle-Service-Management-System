@@ -29,9 +29,12 @@ namespace ShuttleServiceManagementSystem.Utilities
 
             using (SqlConnection conn1 = new SqlConnection(GetConnString()))
             {
-                // Create new commands.
+                // Create new commands and reader
                 SqlCommand cmd = new SqlCommand(query, conn1);
+                cmd.CommandType = CommandType.Text;
                 SqlDataReader reader = null;
+
+                // Add query parameters
 
                 try
                 {
@@ -51,7 +54,7 @@ namespace ShuttleServiceManagementSystem.Utilities
                 }
                 finally
                 {
-                    reader.Dispose();
+                    //reader.Dispose();
                     cmd.Dispose();
                     conn1.Close();
                 }
@@ -60,6 +63,49 @@ namespace ShuttleServiceManagementSystem.Utilities
 
             return value;
         }
+
+        //public string ReturnSQLFirstValue(string query)
+        //{
+        //    // This function will return a single value from the top of a query.  
+        //    // This is useful for doing quick and dirty queries to pull out an individual value.
+        //    string value = "";
+
+        //    using (SqlConnection conn1 = new SqlConnection(GetConnString()))
+        //    {
+        //        // Create new commands and reader
+        //        SqlCommand cmd = new SqlCommand(query, conn1);
+        //        cmd.CommandType = CommandType.Text;
+        //        SqlDataReader reader = null;
+
+        //        // Add query parameters
+
+        //        try
+        //        {
+        //            // Open connection.
+        //            conn1.Open();
+
+        //            // Read in from the database.
+        //            reader = cmd.ExecuteReader();
+        //            reader.Read();
+
+        //            // Convert value.
+        //            value = Convert.ToString(reader[0]);
+        //        }
+        //        catch
+        //        {
+        //            value = "";
+        //        }
+        //        finally
+        //        {
+        //            reader.Dispose();
+        //            cmd.Dispose();
+        //            conn1.Close();
+        //        }
+
+        //    }
+
+        //    return value;
+        //}
 
         public bool RunEmptySQLQuery(string query)
         {

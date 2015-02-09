@@ -1,0 +1,785 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SDSU_SchoolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DESTINATIONS">
+          <Key>
+            <PropertyRef Name="DESTINATION_NAME" />
+          </Key>
+          <Property Name="DESTINATION_NAME" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DESTINATION_CITY" Type="varchar" MaxLength="50" />
+          <Property Name="DESTINATION_STATE" Type="varchar" MaxLength="50" />
+          <Property Name="DESTINATION_ZIPCODE" Type="char" MaxLength="5" />
+        </EntityType>
+        <EntityType Name="DRIVERS_AVAILABILE_HOURS">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+            <PropertyRef Name="DATE" />
+          </Key>
+          <Property Name="USER_ID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="DATE" Type="date" Nullable="false" />
+          <Property Name="START_TIME" Type="time" Precision="7" />
+          <Property Name="END_TIME" Type="time" Precision="7" />
+        </EntityType>
+        <EntityType Name="ORDERS">
+          <Key>
+            <PropertyRef Name="ORDER_NUMBER" />
+          </Key>
+          <Property Name="ORDER_NUMBER" Type="int" Nullable="false" />
+          <Property Name="USER_ID" Type="nvarchar" MaxLength="128" />
+          <Property Name="DATETIME_ORDER_PLACED" Type="datetime" />
+          <Property Name="DEPARTURE_DATETIME" Type="nchar" MaxLength="10" />
+          <Property Name="DEPARTURE_STREET_ADDRESS" Type="varchar" MaxLength="50" />
+          <Property Name="DEPARTURE_CITY" Type="varchar" MaxLength="20" />
+          <Property Name="DEPARTURE_STATE" Type="varchar" MaxLength="20" />
+          <Property Name="DEPARTURE_ZIPCODE" Type="char" MaxLength="5" />
+          <Property Name="DESTINATION_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="NUMBER_OF_PASSENGERS" Type="int" />
+          <Property Name="FLIGHT_DETAILS" Type="varchar" MaxLength="50" />
+          <Property Name="COMMENTS" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="SYSTEM_LOGS">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+            <PropertyRef Name="LOGIN_DATETIME" />
+          </Key>
+          <Property Name="USER_ID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="LOGIN_DATETIME" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SYSTEM_ROLES">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SYSTEM_VARIABLES">
+          <Key>
+            <PropertyRef Name="VARIABLE_NAME" />
+          </Key>
+          <Property Name="VARIABLE_NAME" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="VARIABLE_VALUE" Type="int" />
+        </EntityType>
+        <EntityType Name="TRIPS">
+          <Key>
+            <PropertyRef Name="TRIP_NUMBER" />
+            <PropertyRef Name="DRIVER_USERNAME" />
+            <PropertyRef Name="ORDER_NUMBER" />
+          </Key>
+          <Property Name="TRIP_NUMBER" Type="int" Nullable="false" />
+          <Property Name="DRIVER_USERNAME" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ORDER_NUMBER" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USER_ACCOUNTS">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar(max)" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="Discriminator" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USER_CLAIMS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+          <Property Name="User_Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USER_INFO">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="FIRST_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="LAST_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="STREET_ADDRESS" Type="varchar" MaxLength="50" />
+          <Property Name="CITY" Type="varchar" MaxLength="50" />
+          <Property Name="STATE" Type="varchar" MaxLength="50" />
+          <Property Name="ZIP_CODE" Type="char" MaxLength="5" />
+          <Property Name="EMAIL_ADDRESS" Type="varchar" MaxLength="50" />
+          <Property Name="CELL_NUMBER" Type="char" MaxLength="10" />
+          <Property Name="RECEIVE_TEXT" Type="char" MaxLength="1" />
+          <Property Name="RECEIVE_EMAIL" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="USER_LOGINS">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USER_ROLES">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_User_Id">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="USER_CLAIMS" Type="Self.USER_CLAIMS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="USER_CLAIMS">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="USER_LOGINS" Type="Self.USER_LOGINS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="USER_LOGINS">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_4Moxie_USER_ROLES_4Moxie_SYSTEM_ROLES_RoleId">
+          <End Role="SYSTEM_ROLES" Type="Self.SYSTEM_ROLES" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="USER_ROLES" Type="Self.USER_ROLES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SYSTEM_ROLES">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="USER_ROLES">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_4Moxie_USER_ROLES_4Moxie_USER_ACCOUNTS_UserId">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="USER_ROLES" Type="Self.USER_ROLES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="USER_ROLES">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1" />
+          <End Role="DRIVERS_AVAILABILE_HOURS" Type="Self.DRIVERS_AVAILABILE_HOURS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="DRIVERS_AVAILABILE_HOURS">
+              <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ORDERS_DESTINATIONS">
+          <End Role="DESTINATIONS" Type="Self.DESTINATIONS" Multiplicity="0..1" />
+          <End Role="ORDERS" Type="Self.ORDERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATIONS">
+              <PropertyRef Name="DESTINATION_NAME" />
+            </Principal>
+            <Dependent Role="ORDERS">
+              <PropertyRef Name="DESTINATION_NAME" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ORDERS_USER_ACCOUNTS">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="0..1" />
+          <End Role="ORDERS" Type="Self.ORDERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="ORDERS">
+              <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SYSTEM_LOGS_SYSTEM_LOGS1">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1" />
+          <End Role="SYSTEM_LOGS" Type="Self.SYSTEM_LOGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="SYSTEM_LOGS">
+              <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USER_INFO_USER_ACCOUNTS">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1" />
+          <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="USER_INFO">
+              <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SDSU_SchoolModelStoreContainer">
+          <EntitySet Name="DESTINATIONS" EntityType="Self.DESTINATIONS" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="DRIVERS_AVAILABILE_HOURS" EntityType="Self.DRIVERS_AVAILABILE_HOURS" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="ORDERS" EntityType="Self.ORDERS" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="SYSTEM_LOGS" EntityType="Self.SYSTEM_LOGS" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="SYSTEM_ROLES" EntityType="Self.SYSTEM_ROLES" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="SYSTEM_VARIABLES" EntityType="Self.SYSTEM_VARIABLES" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="TRIPS" EntityType="Self.TRIPS" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="USER_ACCOUNTS" EntityType="Self.USER_ACCOUNTS" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="USER_CLAIMS" EntityType="Self.USER_CLAIMS" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="USER_INFO" EntityType="Self.USER_INFO" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="USER_LOGINS" EntityType="Self.USER_LOGINS" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="USER_ROLES" EntityType="Self.USER_ROLES" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_User_Id" Association="Self.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_User_Id">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="USER_CLAIMS" EntitySet="USER_CLAIMS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId" Association="Self.FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="USER_LOGINS" EntitySet="USER_LOGINS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_4Moxie_USER_ROLES_4Moxie_SYSTEM_ROLES_RoleId" Association="Self.FK_4Moxie_USER_ROLES_4Moxie_SYSTEM_ROLES_RoleId">
+            <End Role="SYSTEM_ROLES" EntitySet="SYSTEM_ROLES" />
+            <End Role="USER_ROLES" EntitySet="USER_ROLES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_4Moxie_USER_ROLES_4Moxie_USER_ACCOUNTS_UserId" Association="Self.FK_4Moxie_USER_ROLES_4Moxie_USER_ACCOUNTS_UserId">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="USER_ROLES" EntitySet="USER_ROLES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" Association="Self.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="DRIVERS_AVAILABILE_HOURS" EntitySet="DRIVERS_AVAILABILE_HOURS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ORDERS_DESTINATIONS" Association="Self.FK_ORDERS_DESTINATIONS">
+            <End Role="DESTINATIONS" EntitySet="DESTINATIONS" />
+            <End Role="ORDERS" EntitySet="ORDERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ORDERS_USER_ACCOUNTS" Association="Self.FK_ORDERS_USER_ACCOUNTS">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="ORDERS" EntitySet="ORDERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SYSTEM_LOGS_SYSTEM_LOGS1" Association="Self.FK_SYSTEM_LOGS_SYSTEM_LOGS1">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="SYSTEM_LOGS" EntitySet="SYSTEM_LOGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USER_INFO_USER_ACCOUNTS" Association="Self.FK_USER_INFO_USER_ACCOUNTS">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="USER_INFO" EntitySet="USER_INFO" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SDSU_SchoolModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DESTINATION">
+          <Key>
+            <PropertyRef Name="DESTINATION_NAME" />
+          </Key>
+          <Property Name="DESTINATION_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DESTINATION_CITY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DESTINATION_STATE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DESTINATION_ZIPCODE" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="ORDERS" Relationship="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS" FromRole="DESTINATION" ToRole="ORDER" />
+        </EntityType>
+        <EntityType Name="SYSTEM_ROLES">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="USER_ACCOUNTS" Relationship="Self.USER_ROLES" FromRole="SYSTEM_ROLES" ToRole="USER_ACCOUNTS" />
+        </EntityType>
+        <EntityType Name="SYSTEM_VARIABLES">
+          <Key>
+            <PropertyRef Name="VARIABLE_NAME" />
+          </Key>
+          <Property Name="VARIABLE_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="VARIABLE_VALUE" Type="Int32" />
+        </EntityType>
+        <EntityType Name="TRIP">
+          <Key>
+            <PropertyRef Name="TRIP_NUMBER" />
+            <PropertyRef Name="DRIVER_USERNAME" />
+            <PropertyRef Name="ORDER_NUMBER" />
+          </Key>
+          <Property Name="TRIP_NUMBER" Type="Int32" Nullable="false" />
+          <Property Name="DRIVER_USERNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ORDER_NUMBER" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="USER_ACCOUNTS">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Discriminator" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="USER_CLAIMS" Relationship="Self.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_User_Id" FromRole="USER_ACCOUNTS" ToRole="USER_CLAIMS" />
+          <NavigationProperty Name="USER_LOGINS" Relationship="Self.FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId" FromRole="USER_ACCOUNTS" ToRole="USER_LOGINS" />
+          <NavigationProperty Name="SYSTEM_ROLES" Relationship="Self.USER_ROLES" FromRole="USER_ACCOUNTS" ToRole="SYSTEM_ROLES" />
+          <NavigationProperty Name="USER_INFO" Relationship="SDSU_SchoolModel.FK_USER_INFO_USER_ACCOUNTS" FromRole="USER_ACCOUNTS" ToRole="USER_INFO" />
+          <NavigationProperty Name="SYSTEM_LOGS" Relationship="SDSU_SchoolModel.FK_SYSTEM_LOGS_SYSTEM_LOGS1" FromRole="USER_ACCOUNTS" ToRole="SYSTEM_LOGS" />
+          <NavigationProperty Name="DRIVERS_AVAILABILE_HOURS" Relationship="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" FromRole="USER_ACCOUNTS" ToRole="DRIVERS_AVAILABILE_HOURS" />
+          <NavigationProperty Name="ORDERS" Relationship="SDSU_SchoolModel.FK_ORDERS_USER_ACCOUNTS" FromRole="USER_ACCOUNTS" ToRole="ORDER" />
+        </EntityType>
+        <EntityType Name="USER_CLAIMS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="User_Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="USER_ACCOUNTS" Relationship="Self.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_User_Id" FromRole="USER_CLAIMS" ToRole="USER_ACCOUNTS" />
+        </EntityType>
+        <EntityType Name="USER_LOGINS">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+          </Key>
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="USER_ACCOUNTS" Relationship="Self.FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId" FromRole="USER_LOGINS" ToRole="USER_ACCOUNTS" />
+        </EntityType>
+        <EntityType Name="C__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="USER_INFO">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+          </Key>
+          <Property Name="USER_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FIRST_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LAST_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="STREET_ADDRESS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CITY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="STATE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ZIP_CODE" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="EMAIL_ADDRESS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CELL_NUMBER" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="RECEIVE_TEXT" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="RECEIVE_EMAIL" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="USER_ACCOUNTS" Relationship="SDSU_SchoolModel.FK_USER_INFO_USER_ACCOUNTS" FromRole="USER_INFO" ToRole="USER_ACCOUNTS" />
+        </EntityType>
+        <Association Name="FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_User_Id">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="USER_CLAIMS" Type="Self.USER_CLAIMS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="USER_CLAIMS">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="USER_LOGINS" Type="Self.USER_LOGINS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="USER_LOGINS">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="USER_ROLES">
+          <End Role="SYSTEM_ROLES" Type="Self.SYSTEM_ROLES" Multiplicity="*" />
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="SDSU_SchoolEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DESTINATIONS" EntityType="Self.DESTINATION" />
+          <EntitySet Name="SYSTEM_ROLES" EntityType="Self.SYSTEM_ROLES" />
+          <EntitySet Name="SYSTEM_VARIABLES" EntityType="Self.SYSTEM_VARIABLES" />
+          <EntitySet Name="TRIPS" EntityType="Self.TRIP" />
+          <EntitySet Name="USER_ACCOUNTS" EntityType="Self.USER_ACCOUNTS" />
+          <EntitySet Name="USER_CLAIMS" EntityType="Self.USER_CLAIMS" />
+          <EntitySet Name="USER_LOGINS" EntityType="Self.USER_LOGINS" />
+          <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="USER_INFO" EntityType="Self.USER_INFO" />
+          <AssociationSet Name="FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_User_Id" Association="Self.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_User_Id">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="USER_CLAIMS" EntitySet="USER_CLAIMS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId" Association="Self.FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="USER_LOGINS" EntitySet="USER_LOGINS" />
+          </AssociationSet>
+          <AssociationSet Name="USER_ROLES" Association="Self.USER_ROLES">
+            <End Role="SYSTEM_ROLES" EntitySet="SYSTEM_ROLES" />
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USER_INFO_USER_ACCOUNTS" Association="SDSU_SchoolModel.FK_USER_INFO_USER_ACCOUNTS">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="USER_INFO" EntitySet="USER_INFO" />
+          </AssociationSet>
+          <EntitySet Name="SYSTEM_LOGS" EntityType="SDSU_SchoolModel.SYSTEM_LOGS" />
+          <AssociationSet Name="FK_SYSTEM_LOGS_SYSTEM_LOGS1" Association="SDSU_SchoolModel.FK_SYSTEM_LOGS_SYSTEM_LOGS1">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="SYSTEM_LOGS" EntitySet="SYSTEM_LOGS" />
+          </AssociationSet>
+          <EntitySet Name="DRIVERS_AVAILABILE_HOURS" EntityType="SDSU_SchoolModel.DRIVERS_AVAILABILE_HOURS" />
+          <AssociationSet Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" Association="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="DRIVERS_AVAILABILE_HOURS" EntitySet="DRIVERS_AVAILABILE_HOURS" />
+          </AssociationSet>
+          <EntitySet Name="ORDERS" EntityType="SDSU_SchoolModel.ORDER" />
+          <AssociationSet Name="FK_ORDERS_DESTINATIONS" Association="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS">
+            <End Role="DESTINATION" EntitySet="DESTINATIONS" />
+            <End Role="ORDER" EntitySet="ORDERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ORDERS_USER_ACCOUNTS" Association="SDSU_SchoolModel.FK_ORDERS_USER_ACCOUNTS">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="ORDER" EntitySet="ORDERS" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_USER_INFO_USER_ACCOUNTS">
+          <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="1" />
+          <End Type="SDSU_SchoolModel.USER_INFO" Role="USER_INFO" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="USER_INFO">
+              <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SYSTEM_LOGS">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+            <PropertyRef Name="LOGIN_DATETIME" />
+          </Key>
+          <Property Name="USER_ID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="LOGIN_DATETIME" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="USER_ACCOUNTS" Relationship="SDSU_SchoolModel.FK_SYSTEM_LOGS_SYSTEM_LOGS1" FromRole="SYSTEM_LOGS" ToRole="USER_ACCOUNTS" />
+        </EntityType>
+        <Association Name="FK_SYSTEM_LOGS_SYSTEM_LOGS1">
+          <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="1" />
+          <End Type="SDSU_SchoolModel.SYSTEM_LOGS" Role="SYSTEM_LOGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="SYSTEM_LOGS">
+              <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DRIVERS_AVAILABILE_HOURS">
+          <Key>
+            <PropertyRef Name="USER_ID" />
+            <PropertyRef Name="DATE" />
+          </Key>
+          <Property Name="USER_ID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="DATE" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="START_TIME" Type="Time" Precision="7" />
+          <Property Name="END_TIME" Type="Time" Precision="7" />
+          <NavigationProperty Name="USER_ACCOUNTS" Relationship="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" FromRole="DRIVERS_AVAILABILE_HOURS" ToRole="USER_ACCOUNTS" />
+        </EntityType>
+        <Association Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
+          <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="1" />
+          <End Type="SDSU_SchoolModel.DRIVERS_AVAILABILE_HOURS" Role="DRIVERS_AVAILABILE_HOURS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="DRIVERS_AVAILABILE_HOURS">
+              <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ORDER">
+          <Key>
+            <PropertyRef Name="ORDER_NUMBER" />
+          </Key>
+          <Property Name="ORDER_NUMBER" Type="Int32" Nullable="false" />
+          <Property Name="USER_ID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="DATETIME_ORDER_PLACED" Type="DateTime" Precision="3" />
+          <Property Name="DEPARTURE_DATETIME" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="DEPARTURE_STREET_ADDRESS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTURE_CITY" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTURE_STATE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DEPARTURE_ZIPCODE" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="DESTINATION_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NUMBER_OF_PASSENGERS" Type="Int32" />
+          <Property Name="FLIGHT_DETAILS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="COMMENTS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DESTINATION" Relationship="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS" FromRole="ORDER" ToRole="DESTINATION" />
+          <NavigationProperty Name="USER_ACCOUNTS" Relationship="SDSU_SchoolModel.FK_ORDERS_USER_ACCOUNTS" FromRole="ORDER" ToRole="USER_ACCOUNTS" />
+        </EntityType>
+        <Association Name="FK_ORDERS_DESTINATIONS">
+          <End Type="SDSU_SchoolModel.DESTINATION" Role="DESTINATION" Multiplicity="0..1" />
+          <End Type="SDSU_SchoolModel.ORDER" Role="ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DESTINATION">
+              <PropertyRef Name="DESTINATION_NAME" />
+            </Principal>
+            <Dependent Role="ORDER">
+              <PropertyRef Name="DESTINATION_NAME" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ORDERS_USER_ACCOUNTS">
+          <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="0..1" />
+          <End Type="SDSU_SchoolModel.ORDER" Role="ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="ORDER">
+              <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SDSU_SchoolModelStoreContainer" CdmEntityContainer="SDSU_SchoolEntities">
+          <EntitySetMapping Name="DESTINATIONS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.DESTINATION">
+              <MappingFragment StoreEntitySet="DESTINATIONS">
+                <ScalarProperty Name="DESTINATION_NAME" ColumnName="DESTINATION_NAME" />
+                <ScalarProperty Name="DESTINATION_CITY" ColumnName="DESTINATION_CITY" />
+                <ScalarProperty Name="DESTINATION_STATE" ColumnName="DESTINATION_STATE" />
+                <ScalarProperty Name="DESTINATION_ZIPCODE" ColumnName="DESTINATION_ZIPCODE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYSTEM_ROLES">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.SYSTEM_ROLES">
+              <MappingFragment StoreEntitySet="SYSTEM_ROLES">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYSTEM_VARIABLES">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.SYSTEM_VARIABLES">
+              <MappingFragment StoreEntitySet="SYSTEM_VARIABLES">
+                <ScalarProperty Name="VARIABLE_NAME" ColumnName="VARIABLE_NAME" />
+                <ScalarProperty Name="VARIABLE_VALUE" ColumnName="VARIABLE_VALUE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TRIPS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.TRIP">
+              <MappingFragment StoreEntitySet="TRIPS">
+                <ScalarProperty Name="TRIP_NUMBER" ColumnName="TRIP_NUMBER" />
+                <ScalarProperty Name="DRIVER_USERNAME" ColumnName="DRIVER_USERNAME" />
+                <ScalarProperty Name="ORDER_NUMBER" ColumnName="ORDER_NUMBER" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USER_ACCOUNTS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.USER_ACCOUNTS">
+              <MappingFragment StoreEntitySet="USER_ACCOUNTS">
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="Discriminator" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USER_CLAIMS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.USER_CLAIMS">
+              <MappingFragment StoreEntitySet="USER_CLAIMS">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USER_LOGINS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.USER_LOGINS">
+              <MappingFragment StoreEntitySet="USER_LOGINS">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C__MigrationHistory">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.C__MigrationHistory">
+              <MappingFragment StoreEntitySet="__MigrationHistory">
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USER_INFO">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.USER_INFO">
+              <MappingFragment StoreEntitySet="USER_INFO">
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="FIRST_NAME" ColumnName="FIRST_NAME" />
+                <ScalarProperty Name="LAST_NAME" ColumnName="LAST_NAME" />
+                <ScalarProperty Name="STREET_ADDRESS" ColumnName="STREET_ADDRESS" />
+                <ScalarProperty Name="CITY" ColumnName="CITY" />
+                <ScalarProperty Name="STATE" ColumnName="STATE" />
+                <ScalarProperty Name="ZIP_CODE" ColumnName="ZIP_CODE" />
+                <ScalarProperty Name="EMAIL_ADDRESS" ColumnName="EMAIL_ADDRESS" />
+                <ScalarProperty Name="CELL_NUMBER" ColumnName="CELL_NUMBER" />
+                <ScalarProperty Name="RECEIVE_TEXT" ColumnName="RECEIVE_TEXT" />
+                <ScalarProperty Name="RECEIVE_EMAIL" ColumnName="RECEIVE_EMAIL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="USER_ROLES" TypeName="SDSU_SchoolModel.USER_ROLES" StoreEntitySet="USER_ROLES">
+            <EndProperty Name="SYSTEM_ROLES">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+            <EndProperty Name="USER_ACCOUNTS">
+              <ScalarProperty Name="USER_ID" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="SYSTEM_LOGS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.SYSTEM_LOGS">
+              <MappingFragment StoreEntitySet="SYSTEM_LOGS">
+                <ScalarProperty Name="LOGIN_DATETIME" ColumnName="LOGIN_DATETIME" />
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DRIVERS_AVAILABILE_HOURS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.DRIVERS_AVAILABILE_HOURS">
+              <MappingFragment StoreEntitySet="DRIVERS_AVAILABILE_HOURS">
+                <ScalarProperty Name="END_TIME" ColumnName="END_TIME" />
+                <ScalarProperty Name="START_TIME" ColumnName="START_TIME" />
+                <ScalarProperty Name="DATE" ColumnName="DATE" />
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ORDERS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.ORDER">
+              <MappingFragment StoreEntitySet="ORDERS">
+                <ScalarProperty Name="COMMENTS" ColumnName="COMMENTS" />
+                <ScalarProperty Name="FLIGHT_DETAILS" ColumnName="FLIGHT_DETAILS" />
+                <ScalarProperty Name="NUMBER_OF_PASSENGERS" ColumnName="NUMBER_OF_PASSENGERS" />
+                <ScalarProperty Name="DESTINATION_NAME" ColumnName="DESTINATION_NAME" />
+                <ScalarProperty Name="DEPARTURE_ZIPCODE" ColumnName="DEPARTURE_ZIPCODE" />
+                <ScalarProperty Name="DEPARTURE_STATE" ColumnName="DEPARTURE_STATE" />
+                <ScalarProperty Name="DEPARTURE_CITY" ColumnName="DEPARTURE_CITY" />
+                <ScalarProperty Name="DEPARTURE_STREET_ADDRESS" ColumnName="DEPARTURE_STREET_ADDRESS" />
+                <ScalarProperty Name="DEPARTURE_DATETIME" ColumnName="DEPARTURE_DATETIME" />
+                <ScalarProperty Name="DATETIME_ORDER_PLACED" ColumnName="DATETIME_ORDER_PLACED" />
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="ORDER_NUMBER" ColumnName="ORDER_NUMBER" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
