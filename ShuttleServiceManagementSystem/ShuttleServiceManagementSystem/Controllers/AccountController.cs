@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using ShuttleServiceManagementSystem.Models;
+using ShuttleServiceManagementSystem.Utilities;
 
 namespace ShuttleServiceManagementSystem.Controllers
 {
@@ -26,6 +27,8 @@ namespace ShuttleServiceManagementSystem.Controllers
         }
 
         public UserManager<ApplicationUser> UserManager { get; private set; }
+
+        public SSMS_Helper ssms = new SSMS_Helper();
 
         //
         // GET: /Account/Login
@@ -49,6 +52,9 @@ namespace ShuttleServiceManagementSystem.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
+
+                    ssms.CreateSystemLog();  // Create record log
+
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -93,25 +99,6 @@ namespace ShuttleServiceManagementSystem.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
-        }
-
-        //
-        // POST: /Account/Disassociate
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Disassociate(string loginProvider, string providerKey)
-        {
-            ManageMessageId? message = null;
-            IdentityResult result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
-            if (result.Succeeded)
-            {
-                message = ManageMessageId.RemoveLoginSuccess;
-            }
-            else
-            {
-                message = ManageMessageId.Error;
-            }
-            return RedirectToAction("Manage", new { Message = message });
         }
 
         //

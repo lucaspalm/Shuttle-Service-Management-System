@@ -4,58 +4,50 @@ using System.Linq;
 using System.Web;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNet.Identity;
+using System.Data.SqlClient;
+using SSMSDataModel.DAL;
 
 namespace ShuttleServiceManagementSystem.Utilities
 {
     public class SSMS_Helper
     {
-        Database_Helper db = new Database_Helper();
+        private SDSU_SchoolEntities db = new SDSU_SchoolEntities();
 
-        public bool IsValidLogin(string username, string password)
+        /// <summary>
+        /// This method creates a log record that is entered into the database for security purposes.
+        /// </summary>
+        public void CreateSystemLog()
         {
             // Variable Declarations
+            string userID = "";
+            string currentDate = "";
             string query = "";
-            string queryResult = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
 
-            // Create the database query to determine if the username/password combination exists
-            query = "SELECT COUNT(*) FROM [SDSU_School].[Lucas].[USER_ACCOUNT_INFO] WHERE USERNAME = '" + username + "' AND PASSWORD = '" + password + "'";
+            // Get the ID of the current user
+            userID = HttpContext.Current.User.Identity.GetUserId();
 
-            // Run the query
-            queryResult = db.ReturnSQLFirstValue(query);
+            // Get the current datetime
+            currentDate = DateTime.Now.ToString();
 
-            // Check the query result
-            if (queryResult == null || queryResult == "" || queryResult == "0")
-            {
-                return false;
-            }    
-            else
-            {
-                return true;
-            }
+            // Create the query
+            query = "INSERT INTO [SDSU_School].[4Moxie].[SYSTEM_LOGS] VALUES (@userid, @datetime)";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userID));
+            paramList.Add(new SqlParameter("@datetime", currentDate));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
         }
 
-        public string GetUserAccessLevel(string username)
-        {
-            // Variable Declarations
-            string query = "";
-            string queryResult = "";
-
-            // Create the database query to determine if the username/password combination exists
-            query = "SELECT ACCESS_LEVEL FROM [SDSU_School].[Lucas].[USER_ACCOUNT_INFO] WHERE USERNAME = '" + username + "'";
-
-            // Run the query
-            queryResult = db.ReturnSQLFirstValue(query);
-
-            // Return the query result
-            return queryResult;
-        }
-
-        public void CreateSystemLog(string username)
-        {
-
-        }
-
-        public string CreateSalt()
+        /// <summary>
+        /// This method creates and returns a salt string used for hashing a user's password.
+        /// </summary>
+        /// <returns>string</returns>
+        public string CreatePasswordSalt()
         {
             var rng = new RNGCryptoServiceProvider();
             var buff = new byte[10];
@@ -63,7 +55,13 @@ namespace ShuttleServiceManagementSystem.Utilities
             return Convert.ToBase64String(buff);
         }
 
-        public string CreateHash(string password, string salt)
+        /// <summary>
+        /// This method creats and returns a hashed string that is the result of hashing the user's password with a randomly generated salt value.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="salt"></param>
+        /// <returns>string</returns>
+        public string CreatePasswordHash(string password, string salt)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(password + salt);
             SHA256Managed sha256hashString = new SHA256Managed();

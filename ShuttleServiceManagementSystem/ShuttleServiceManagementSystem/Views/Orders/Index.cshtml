@@ -1,0 +1,93 @@
+﻿@model IEnumerable<SSMSDataModel.DAL.ORDER>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DATETIME_ORDER_PLACED)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DEPARTURE_DATETIME)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DEPARTURE_STREET_ADDRESS)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DEPARTURE_CITY)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DEPARTURE_STATE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DEPARTURE_ZIPCODE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NUMBER_OF_PASSENGERS)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FLIGHT_DETAILS)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.COMMENTS)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DESTINATION.DESTINATION_CITY)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.USER_ACCOUNTS.UserName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DATETIME_ORDER_PLACED)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DEPARTURE_DATETIME)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DEPARTURE_STREET_ADDRESS)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DEPARTURE_CITY)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DEPARTURE_STATE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DEPARTURE_ZIPCODE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NUMBER_OF_PASSENGERS)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FLIGHT_DETAILS)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.COMMENTS)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DESTINATION.DESTINATION_CITY)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.USER_ACCOUNTS.UserName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ORDER_NUMBER }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ORDER_NUMBER }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ORDER_NUMBER })
+        </td>
+    </tr>
+}
+
+</table>

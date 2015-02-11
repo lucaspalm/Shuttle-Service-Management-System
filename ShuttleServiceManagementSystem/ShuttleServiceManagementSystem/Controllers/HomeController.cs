@@ -6,13 +6,15 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using ShuttleServiceManagementSystem.Models;
-using SSMSDataModel.DAL;
+using ShuttleServiceManagementSystem.Utilities;
 
 namespace ShuttleServiceManagementSystem.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
+        public SSMS_Helper ssms = new SSMS_Helper();
+
         [HttpGet]
         public ActionResult Index()
         {

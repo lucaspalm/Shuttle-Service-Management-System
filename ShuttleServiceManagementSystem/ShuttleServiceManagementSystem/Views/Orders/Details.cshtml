@@ -1,0 +1,106 @@
+﻿@model SSMSDataModel.DAL.ORDER
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ORDER</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DATETIME_ORDER_PLACED)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DATETIME_ORDER_PLACED)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DEPARTURE_DATETIME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DEPARTURE_DATETIME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DEPARTURE_STREET_ADDRESS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DEPARTURE_STREET_ADDRESS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DEPARTURE_CITY)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DEPARTURE_CITY)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DEPARTURE_STATE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DEPARTURE_STATE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DEPARTURE_ZIPCODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DEPARTURE_ZIPCODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NUMBER_OF_PASSENGERS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NUMBER_OF_PASSENGERS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FLIGHT_DETAILS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FLIGHT_DETAILS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.COMMENTS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.COMMENTS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DESTINATION.DESTINATION_CITY)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DESTINATION.DESTINATION_CITY)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.USER_ACCOUNTS.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.USER_ACCOUNTS.UserName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ORDER_NUMBER }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
