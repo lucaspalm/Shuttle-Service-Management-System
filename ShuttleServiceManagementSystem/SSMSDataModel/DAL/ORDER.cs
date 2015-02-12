@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations;
+
 namespace SSMSDataModel.DAL
 {
     using System;
@@ -17,14 +19,39 @@ namespace SSMSDataModel.DAL
         public int ORDER_NUMBER { get; set; }
         public string USER_ID { get; set; }
         public Nullable<System.DateTime> DATETIME_ORDER_PLACED { get; set; }
+
+        [Required]
+        [Display(Name = "Departure Date")]
         public string DEPARTURE_DATETIME { get; set; }
+
+        [Required]
+        [Display(Name = "Address")]
         public string DEPARTURE_STREET_ADDRESS { get; set; }
+
+        [Required]
+        [Display(Name = "City")]
         public string DEPARTURE_CITY { get; set; }
+
+        [Required]
+        [Display(Name = "State")]
         public string DEPARTURE_STATE { get; set; }
+
+        [Required]
+        [Display(Name = "Zip Code")]
         public string DEPARTURE_ZIPCODE { get; set; }
+
+        [Required]
+        [Display(Name = "Destination")]
         public string DESTINATION_NAME { get; set; }
+
+        [Required]
+        [Display(Name = "# of Passengers")]
         public Nullable<int> NUMBER_OF_PASSENGERS { get; set; }
+
+        [Display(Name = "Flight Details")]
         public string FLIGHT_DETAILS { get; set; }
+
+        [Display(Name = "Comments")]
         public string COMMENTS { get; set; }
     
         public virtual DESTINATION DESTINATION { get; set; }

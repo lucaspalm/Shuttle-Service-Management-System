@@ -71,3 +71,7 @@ namespace ShuttleServiceManagementSystem.Utilities
         }
     }
 }
+
+// The following links explain how to use the Entity framework to execute native SQL queries very well... 
+// http://www.binaryintellect.net/articles/fbc96859-8a31-4735-baeb-7adcbc521b30.aspx
+// http://www.entityframeworktutorial.net/EntityFramework4.3/raw-sql-query-in-entity-framework.aspx

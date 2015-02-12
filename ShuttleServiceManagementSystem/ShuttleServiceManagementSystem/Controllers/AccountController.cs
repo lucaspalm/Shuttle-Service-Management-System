@@ -52,9 +52,6 @@ namespace ShuttleServiceManagementSystem.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
-
-                    ssms.CreateSystemLog();  // Create record log
-
                     return RedirectToLocal(returnUrl);
                 }
                 else
