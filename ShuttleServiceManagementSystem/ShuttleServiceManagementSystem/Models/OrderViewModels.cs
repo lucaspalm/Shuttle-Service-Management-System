@@ -1,12 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
+using ShuttleServiceManagementSystem.Utilities;
+using System;
 
 namespace ShuttleServiceManagementSystem.Models
 {
     public class CreateOrderViewModel
     {
+        private SSMS_Helper ssms = new SSMS_Helper();
+
         [Required]
         [Display(Name = "Departure Date")]
-        public string DepartureDateTime { get; set; }
+        public DateTime DepartureDateTime { get; set; }
 
         [Required]
         [Display(Name = "Address")]

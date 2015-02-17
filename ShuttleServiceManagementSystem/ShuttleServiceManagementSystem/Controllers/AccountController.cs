@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using ShuttleServiceManagementSystem.Models;
 using ShuttleServiceManagementSystem.Utilities;
+using SSMSDataModel.DAL;
 
 namespace ShuttleServiceManagementSystem.Controllers
 {
@@ -36,6 +37,7 @@ namespace ShuttleServiceManagementSystem.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+            List<string> mylist = ssms.GetDestinationList();
             return View();
         }
 
@@ -52,6 +54,7 @@ namespace ShuttleServiceManagementSystem.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
+                    ssms.CreateSystemLog(model.UserName.Trim());  // Create login record log
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -162,6 +165,13 @@ namespace ShuttleServiceManagementSystem.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        //
+        // GET: /Account/AddProfileInfo
+        public ActionResult AddProfileInfo()
+        {
+            return View();
         }
 
         //

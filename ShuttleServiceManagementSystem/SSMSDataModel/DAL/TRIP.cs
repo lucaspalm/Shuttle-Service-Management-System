@@ -15,7 +15,7 @@ namespace SSMSDataModel.DAL
     public partial class TRIP
     {
         public int TRIP_NUMBER { get; set; }
-        public string DRIVER_USERNAME { get; set; }
+        public string DRIVER_USER_ID { get; set; }
         public int ORDER_NUMBER { get; set; }
     }
 }

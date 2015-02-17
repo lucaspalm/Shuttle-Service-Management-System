@@ -53,4 +53,47 @@ namespace ShuttleServiceManagementSystem.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
+
+    public class ProfileInfoViewModel
+    {
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required]
+        [Display(Name = "Home Address")]
+        public string StreetAddress { get; set; }
+
+        [Required]
+        [Display(Name = "City")]
+        public string City { get; set; }
+
+        [Required]
+        [Display(Name = "State")]
+        public string State { get; set; }
+
+        [Required]
+        [Display(Name = "Zip Code")]
+        public string ZipCode { get; set; }
+
+        [Required]
+        [Display(Name = "Email Address")]
+        public string EmailAddress { get; set; }
+
+        [Required]
+        [Display(Name = "Cell Number")]
+        public string CellNumber { get; set; }
+
+        [Required]
+        [Display(Name = "Receive Text Alerts?")]
+        public bool ReceiveText { get; set; }
+
+        [Required]
+        [Display(Name = "Receive Email Alerts?")]
+        public bool ReceiveEmail { get; set; }
+    }
 }

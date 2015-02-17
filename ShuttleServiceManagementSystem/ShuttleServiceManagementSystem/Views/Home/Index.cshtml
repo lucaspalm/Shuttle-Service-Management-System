@@ -5,27 +5,25 @@
 <div class="jumbotron">
     <h1>RIDES R' US</h1>
     <p class="lead">We'll pick you up!</p>
-    <p>@Html.ActionLink("Create Order", "Create", "Orders", null, new { @class = "btn btn-primary btn-large" })</p>
+    <p>@Html.ActionLink("Create Trip Order Now!", "Create", "Orders", null, new { @class = "btn btn-primary btn-large" })</p>
 </div>
 
 <div class="row">
     <div class="col-md-4">
-        <h2>Getting started</h2>
+        <h2>Customers</h2>
         <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
+            Customers have the ability to easily place a trip order to be shuttled to and from their desired location.
         </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        <p>@Html.ActionLink("Customer Home", "Home", "Customers", null, new { @class = "btn btn-default" })</p>
     </div>
     <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        <h2>Drivers</h2>
+        <p>Drivers can view their trip schedules as well as manage their own timesheets.</p>
+        <p>@Html.ActionLink("Driver Home", "Home", "Drivers", null, new { @class = "btn btn-default" })</p>
     </div>
     <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+        <h2>Managers</h2>
+        <p>Managers can assign trips to drivers, manage all user accounts and orders, deal with trip finacials, and more.</p>
+        <p>@Html.ActionLink("Manager Home", "Home", "Managers", null, new { @class = "btn btn-default" })</p>
     </div>
 </div>

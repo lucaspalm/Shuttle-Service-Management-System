@@ -18,7 +18,6 @@ namespace ShuttleServiceManagementSystem.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            ssms.CreateSystemLog();  // Create login record log
             return View();
         }
 

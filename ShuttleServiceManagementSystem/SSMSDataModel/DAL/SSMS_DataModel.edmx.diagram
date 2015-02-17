@@ -5,10 +5,8 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="257379c386ca41d9a5c589d7ef568fd6" Name="Diagram1">
-        <EntityTypeShape EntityType="SDSU_SchoolModel.DESTINATION" Width="2" PointX="0.75" PointY="7.875" IsExpanded="true" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.SYSTEM_ROLES" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.SYSTEM_VARIABLES" Width="1.5" PointX="7.375" PointY="7.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SDSU_SchoolModel.TRIP" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.USER_ACCOUNTS" Width="1.5" PointX="3" PointY="2" IsExpanded="true" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.USER_CLAIMS" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.USER_LOGINS" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
@@ -24,8 +22,10 @@
         <EntityTypeShape EntityType="SDSU_SchoolModel.DRIVERS_AVAILABILE_HOURS" Width="1.5" PointX="5.25" PointY="10.625" />
         <AssociationConnector Association="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.ORDER" Width="2.375" PointX="8.25" PointY="11.125" />
-        <AssociationConnector Association="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS" />
         <AssociationConnector Association="SDSU_SchoolModel.FK_ORDERS_USER_ACCOUNTS" />
+        <EntityTypeShape EntityType="SDSU_SchoolModel.TRIP" Width="1.5" PointX="3.375" PointY="6.75" />
+        <EntityTypeShape EntityType="SDSU_SchoolModel.DESTINATION" Width="1.5" PointX="0.75" PointY="6.875" />
+        <AssociationConnector Association="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

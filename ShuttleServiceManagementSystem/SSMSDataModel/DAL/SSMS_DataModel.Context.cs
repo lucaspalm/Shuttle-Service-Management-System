@@ -25,10 +25,8 @@ namespace SSMSDataModel.DAL
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<DESTINATION> DESTINATIONS { get; set; }
         public virtual DbSet<SYSTEM_ROLES> SYSTEM_ROLES { get; set; }
         public virtual DbSet<SYSTEM_VARIABLES> SYSTEM_VARIABLES { get; set; }
-        public virtual DbSet<TRIP> TRIPS { get; set; }
         public virtual DbSet<USER_ACCOUNTS> USER_ACCOUNTS { get; set; }
         public virtual DbSet<USER_CLAIMS> USER_CLAIMS { get; set; }
         public virtual DbSet<USER_LOGINS> USER_LOGINS { get; set; }
@@ -38,5 +36,7 @@ namespace SSMSDataModel.DAL
         public virtual DbSet<SYSTEM_LOGS> SYSTEM_LOGS { get; set; }
         public virtual DbSet<DRIVERS_AVAILABILE_HOURS> DRIVERS_AVAILABILE_HOURS { get; set; }
         public virtual DbSet<ORDER> ORDERS { get; set; }
+        public virtual DbSet<TRIP> TRIPS { get; set; }
+        public virtual DbSet<DESTINATION> DESTINATIONS { get; set; }
     }
 }

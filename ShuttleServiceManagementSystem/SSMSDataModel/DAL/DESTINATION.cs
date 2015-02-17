@@ -20,6 +20,7 @@ namespace SSMSDataModel.DAL
         }
     
         public string DESTINATION_NAME { get; set; }
+        public string DESTINATION_ADDRESS { get; set; }
         public string DESTINATION_CITY { get; set; }
         public string DESTINATION_STATE { get; set; }
         public string DESTINATION_ZIPCODE { get; set; }

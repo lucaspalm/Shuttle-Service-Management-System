@@ -10,6 +10,7 @@
             <PropertyRef Name="DESTINATION_NAME" />
           </Key>
           <Property Name="DESTINATION_NAME" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DESTINATION_ADDRESS" Type="varchar" MaxLength="50" />
           <Property Name="DESTINATION_CITY" Type="varchar" MaxLength="50" />
           <Property Name="DESTINATION_STATE" Type="varchar" MaxLength="50" />
           <Property Name="DESTINATION_ZIPCODE" Type="char" MaxLength="5" />
@@ -66,11 +67,11 @@
         <EntityType Name="TRIPS">
           <Key>
             <PropertyRef Name="TRIP_NUMBER" />
-            <PropertyRef Name="DRIVER_USERNAME" />
+            <PropertyRef Name="DRIVER_USER_ID" />
             <PropertyRef Name="ORDER_NUMBER" />
           </Key>
           <Property Name="TRIP_NUMBER" Type="int" Nullable="false" />
-          <Property Name="DRIVER_USERNAME" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DRIVER_USER_ID" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="ORDER_NUMBER" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="USER_ACCOUNTS">
@@ -318,16 +319,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SDSU_SchoolModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="DESTINATION">
-          <Key>
-            <PropertyRef Name="DESTINATION_NAME" />
-          </Key>
-          <Property Name="DESTINATION_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="DESTINATION_CITY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DESTINATION_STATE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DESTINATION_ZIPCODE" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
-          <NavigationProperty Name="ORDERS" Relationship="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS" FromRole="DESTINATION" ToRole="ORDER" />
-        </EntityType>
         <EntityType Name="SYSTEM_ROLES">
           <Key>
             <PropertyRef Name="Id" />
@@ -342,16 +333,6 @@
           </Key>
           <Property Name="VARIABLE_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="VARIABLE_VALUE" Type="Int32" />
-        </EntityType>
-        <EntityType Name="TRIP">
-          <Key>
-            <PropertyRef Name="TRIP_NUMBER" />
-            <PropertyRef Name="DRIVER_USERNAME" />
-            <PropertyRef Name="ORDER_NUMBER" />
-          </Key>
-          <Property Name="TRIP_NUMBER" Type="Int32" Nullable="false" />
-          <Property Name="DRIVER_USERNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ORDER_NUMBER" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="USER_ACCOUNTS">
           <Key>
@@ -461,10 +442,8 @@
           <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="*" />
         </Association>
         <EntityContainer Name="SDSU_SchoolEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="DESTINATIONS" EntityType="Self.DESTINATION" />
           <EntitySet Name="SYSTEM_ROLES" EntityType="Self.SYSTEM_ROLES" />
           <EntitySet Name="SYSTEM_VARIABLES" EntityType="Self.SYSTEM_VARIABLES" />
-          <EntitySet Name="TRIPS" EntityType="Self.TRIP" />
           <EntitySet Name="USER_ACCOUNTS" EntityType="Self.USER_ACCOUNTS" />
           <EntitySet Name="USER_CLAIMS" EntityType="Self.USER_CLAIMS" />
           <EntitySet Name="USER_LOGINS" EntityType="Self.USER_LOGINS" />
@@ -498,12 +477,14 @@
             <End Role="DRIVERS_AVAILABILE_HOURS" EntitySet="DRIVERS_AVAILABILE_HOURS" />
           </AssociationSet>
           <EntitySet Name="ORDERS" EntityType="SDSU_SchoolModel.ORDER" />
-          <AssociationSet Name="FK_ORDERS_DESTINATIONS" Association="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS">
-            <End Role="DESTINATION" EntitySet="DESTINATIONS" />
-            <End Role="ORDER" EntitySet="ORDERS" />
-          </AssociationSet>
           <AssociationSet Name="FK_ORDERS_USER_ACCOUNTS" Association="SDSU_SchoolModel.FK_ORDERS_USER_ACCOUNTS">
             <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="ORDER" EntitySet="ORDERS" />
+          </AssociationSet>
+          <EntitySet Name="TRIPS" EntityType="SDSU_SchoolModel.TRIP" />
+          <EntitySet Name="DESTINATIONS" EntityType="SDSU_SchoolModel.DESTINATION" />
+          <AssociationSet Name="FK_ORDERS_DESTINATIONS" Association="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS">
+            <End Role="DESTINATION" EntitySet="DESTINATIONS" />
             <End Role="ORDER" EntitySet="ORDERS" />
           </AssociationSet>
         </EntityContainer>
@@ -579,8 +560,41 @@
           <Property Name="NUMBER_OF_PASSENGERS" Type="Int32" />
           <Property Name="FLIGHT_DETAILS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="COMMENTS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="DESTINATION" Relationship="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS" FromRole="ORDER" ToRole="DESTINATION" />
           <NavigationProperty Name="USER_ACCOUNTS" Relationship="SDSU_SchoolModel.FK_ORDERS_USER_ACCOUNTS" FromRole="ORDER" ToRole="USER_ACCOUNTS" />
+          <NavigationProperty Name="DESTINATION" Relationship="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS" FromRole="ORDER" ToRole="DESTINATION" />
+        </EntityType>
+        <Association Name="FK_ORDERS_USER_ACCOUNTS">
+          <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="0..1" />
+          <End Type="SDSU_SchoolModel.ORDER" Role="ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="ORDER">
+              <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TRIP">
+          <Key>
+            <PropertyRef Name="TRIP_NUMBER" />
+            <PropertyRef Name="DRIVER_USER_ID" />
+            <PropertyRef Name="ORDER_NUMBER" />
+          </Key>
+          <Property Name="TRIP_NUMBER" Type="Int32" Nullable="false" />
+          <Property Name="DRIVER_USER_ID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ORDER_NUMBER" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DESTINATION">
+          <Key>
+            <PropertyRef Name="DESTINATION_NAME" />
+          </Key>
+          <Property Name="DESTINATION_NAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DESTINATION_ADDRESS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DESTINATION_CITY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DESTINATION_STATE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DESTINATION_ZIPCODE" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="ORDERS" Relationship="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS" FromRole="DESTINATION" ToRole="ORDER" />
         </EntityType>
         <Association Name="FK_ORDERS_DESTINATIONS">
           <End Type="SDSU_SchoolModel.DESTINATION" Role="DESTINATION" Multiplicity="0..1" />
@@ -594,34 +608,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ORDERS_USER_ACCOUNTS">
-          <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="0..1" />
-          <End Type="SDSU_SchoolModel.ORDER" Role="ORDER" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USER_ACCOUNTS">
-              <PropertyRef Name="USER_ID" />
-            </Principal>
-            <Dependent Role="ORDER">
-              <PropertyRef Name="USER_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="SDSU_SchoolModelStoreContainer" CdmEntityContainer="SDSU_SchoolEntities">
-          <EntitySetMapping Name="DESTINATIONS">
-            <EntityTypeMapping TypeName="SDSU_SchoolModel.DESTINATION">
-              <MappingFragment StoreEntitySet="DESTINATIONS">
-                <ScalarProperty Name="DESTINATION_NAME" ColumnName="DESTINATION_NAME" />
-                <ScalarProperty Name="DESTINATION_CITY" ColumnName="DESTINATION_CITY" />
-                <ScalarProperty Name="DESTINATION_STATE" ColumnName="DESTINATION_STATE" />
-                <ScalarProperty Name="DESTINATION_ZIPCODE" ColumnName="DESTINATION_ZIPCODE" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SYSTEM_ROLES">
             <EntityTypeMapping TypeName="SDSU_SchoolModel.SYSTEM_ROLES">
               <MappingFragment StoreEntitySet="SYSTEM_ROLES">
@@ -635,15 +627,6 @@
               <MappingFragment StoreEntitySet="SYSTEM_VARIABLES">
                 <ScalarProperty Name="VARIABLE_NAME" ColumnName="VARIABLE_NAME" />
                 <ScalarProperty Name="VARIABLE_VALUE" ColumnName="VARIABLE_VALUE" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TRIPS">
-            <EntityTypeMapping TypeName="SDSU_SchoolModel.TRIP">
-              <MappingFragment StoreEntitySet="TRIPS">
-                <ScalarProperty Name="TRIP_NUMBER" ColumnName="TRIP_NUMBER" />
-                <ScalarProperty Name="DRIVER_USERNAME" ColumnName="DRIVER_USERNAME" />
-                <ScalarProperty Name="ORDER_NUMBER" ColumnName="ORDER_NUMBER" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -756,6 +739,26 @@
                 <ScalarProperty Name="DATETIME_ORDER_PLACED" ColumnName="DATETIME_ORDER_PLACED" />
                 <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
                 <ScalarProperty Name="ORDER_NUMBER" ColumnName="ORDER_NUMBER" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TRIPS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.TRIP">
+              <MappingFragment StoreEntitySet="TRIPS">
+                <ScalarProperty Name="ORDER_NUMBER" ColumnName="ORDER_NUMBER" />
+                <ScalarProperty Name="DRIVER_USER_ID" ColumnName="DRIVER_USER_ID" />
+                <ScalarProperty Name="TRIP_NUMBER" ColumnName="TRIP_NUMBER" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DESTINATIONS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.DESTINATION">
+              <MappingFragment StoreEntitySet="DESTINATIONS">
+                <ScalarProperty Name="DESTINATION_ZIPCODE" ColumnName="DESTINATION_ZIPCODE" />
+                <ScalarProperty Name="DESTINATION_STATE" ColumnName="DESTINATION_STATE" />
+                <ScalarProperty Name="DESTINATION_CITY" ColumnName="DESTINATION_CITY" />
+                <ScalarProperty Name="DESTINATION_ADDRESS" ColumnName="DESTINATION_ADDRESS" />
+                <ScalarProperty Name="DESTINATION_NAME" ColumnName="DESTINATION_NAME" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
