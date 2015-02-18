@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace ShuttleServiceManagementSystem.Controllers
 {
+    [Authorize(Roles = "Manager, Administrator")]
     public class ManagersController : Controller
     {
         //

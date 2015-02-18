@@ -33,9 +33,9 @@ namespace SSMSDataModel.DAL
         public virtual ICollection<USER_CLAIMS> USER_CLAIMS { get; set; }
         public virtual ICollection<USER_LOGINS> USER_LOGINS { get; set; }
         public virtual ICollection<SYSTEM_ROLES> SYSTEM_ROLES { get; set; }
-        public virtual USER_INFO USER_INFO { get; set; }
         public virtual ICollection<SYSTEM_LOGS> SYSTEM_LOGS { get; set; }
         public virtual ICollection<DRIVERS_AVAILABILE_HOURS> DRIVERS_AVAILABILE_HOURS { get; set; }
         public virtual ICollection<ORDER> ORDERS { get; set; }
+        public virtual USER_INFO USER_INFO { get; set; }
     }
 }

@@ -12,20 +12,20 @@
         <EntityTypeShape EntityType="SDSU_SchoolModel.USER_LOGINS" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.C__MigrationHistory" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.sysdiagram" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SDSU_SchoolModel.USER_INFO" Width="1.5" PointX="9.75" PointY="6.75" IsExpanded="true" />
         <AssociationConnector Association="SDSU_SchoolModel.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_User_Id" ManuallyRouted="false" />
         <AssociationConnector Association="SDSU_SchoolModel.FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="SDSU_SchoolModel.USER_ROLES" ManuallyRouted="false" />
-        <AssociationConnector Association="SDSU_SchoolModel.FK_USER_INFO_USER_ACCOUNTS" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.SYSTEM_LOGS" Width="1.5" PointX="7.5" PointY="3.75" />
         <AssociationConnector Association="SDSU_SchoolModel.FK_SYSTEM_LOGS_SYSTEM_LOGS1" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.DRIVERS_AVAILABILE_HOURS" Width="1.5" PointX="5.25" PointY="10.625" />
         <AssociationConnector Association="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" />
-        <EntityTypeShape EntityType="SDSU_SchoolModel.ORDER" Width="2.375" PointX="8.25" PointY="11.125" />
-        <AssociationConnector Association="SDSU_SchoolModel.FK_ORDERS_USER_ACCOUNTS" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.TRIP" Width="1.5" PointX="3.375" PointY="6.75" />
-        <EntityTypeShape EntityType="SDSU_SchoolModel.DESTINATION" Width="1.5" PointX="0.75" PointY="6.875" />
+        <EntityTypeShape EntityType="SDSU_SchoolModel.DESTINATION" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="SDSU_SchoolModel.ORDER" Width="1.5" PointX="12.25" PointY="3.75" />
         <AssociationConnector Association="SDSU_SchoolModel.FK_ORDERS_DESTINATIONS" />
+        <AssociationConnector Association="SDSU_SchoolModel.FK_ORDERS_USER_ACCOUNTS" />
+        <EntityTypeShape EntityType="SDSU_SchoolModel.USER_INFO" Width="1.5" PointX="5.25" PointY="14" />
+        <AssociationConnector Association="SDSU_SchoolModel.FK_USER_INFO_USER_ACCOUNTS" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

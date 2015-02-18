@@ -82,7 +82,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ReceiveText, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.ReceiveText)
+                @Html.EditorFor(model => model.ReceiveText)
                 @Html.ValidationMessageFor(model => model.ReceiveText)
             </div>
         </div>
@@ -90,7 +90,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ReceiveEmail, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.ReceiveEmail)
+                @Html.EditorFor(model => model.ReceiveEmail)
                 @Html.ValidationMessageFor(model => model.ReceiveEmail)
             </div>
         </div>

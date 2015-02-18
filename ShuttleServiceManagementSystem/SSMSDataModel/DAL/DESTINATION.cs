@@ -19,6 +19,7 @@ namespace SSMSDataModel.DAL
             this.ORDERS = new HashSet<ORDER>();
         }
     
+        public int DESTINATION_ID { get; set; }
         public string DESTINATION_NAME { get; set; }
         public string DESTINATION_ADDRESS { get; set; }
         public string DESTINATION_CITY { get; set; }

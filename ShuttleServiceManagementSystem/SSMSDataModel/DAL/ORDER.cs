@@ -17,17 +17,17 @@ namespace SSMSDataModel.DAL
         public int ORDER_NUMBER { get; set; }
         public string USER_ID { get; set; }
         public Nullable<System.DateTime> DATETIME_ORDER_PLACED { get; set; }
-        public string DEPARTURE_DATETIME { get; set; }
+        public Nullable<System.DateTime> DEPARTURE_DATETIME { get; set; }
         public string DEPARTURE_STREET_ADDRESS { get; set; }
         public string DEPARTURE_CITY { get; set; }
         public string DEPARTURE_STATE { get; set; }
         public string DEPARTURE_ZIPCODE { get; set; }
-        public string DESTINATION_NAME { get; set; }
+        public Nullable<int> DESTINATION_ID { get; set; }
         public Nullable<int> NUMBER_OF_PASSENGERS { get; set; }
         public string FLIGHT_DETAILS { get; set; }
         public string COMMENTS { get; set; }
     
-        public virtual USER_ACCOUNTS USER_ACCOUNTS { get; set; }
         public virtual DESTINATION DESTINATION { get; set; }
+        public virtual USER_ACCOUNTS USER_ACCOUNTS { get; set; }
     }
 }

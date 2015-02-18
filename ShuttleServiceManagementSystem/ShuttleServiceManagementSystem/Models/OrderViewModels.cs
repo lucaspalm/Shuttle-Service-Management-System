@@ -12,22 +12,23 @@ namespace ShuttleServiceManagementSystem.Models
 
         [Required]
         [Display(Name = "Departure Date")]
+        [DataType(DataType.DateTime)]
         public DateTime DepartureDateTime { get; set; }
 
         [Required]
-        [Display(Name = "Address")]
+        [Display(Name = "Departure Address")]
         public string DepartureAddress { get; set; }
 
         [Required]
-        [Display(Name = "City")]
+        [Display(Name = "Departure City")]
         public string DepartureCity { get; set; }
 
         [Required]
-        [Display(Name = "State")]
+        [Display(Name = "Departure State")]
         public string DepartureState { get; set; }
 
         [Required]
-        [Display(Name = "Zip Code")]
+        [Display(Name = "Departure Zip Code")]
         public string DepartureZipCode { get; set; }
 
         [Required]
@@ -42,6 +43,7 @@ namespace ShuttleServiceManagementSystem.Models
         public string FlightDetails { get; set; }
 
         [Display(Name = "Comments")]
+        [DataType(DataType.MultilineText)]
         public string Comments { get; set; }
     }
 }

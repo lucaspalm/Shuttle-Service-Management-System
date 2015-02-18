@@ -5,7 +5,7 @@
 <div class="jumbotron">
     <h1>RIDES R' US</h1>
     <p class="lead">We'll pick you up!</p>
-    <p>@Html.ActionLink("Create Trip Order Now!", "Create", "Orders", null, new { @class = "btn btn-primary btn-large" })</p>
+    <p>@Html.ActionLink("Create Trip Order Now!", "CreateOrder", "Customers", null, new { @class = "btn btn-primary btn-large" })</p>
 </div>
 
 <div class="row">
@@ -18,7 +18,7 @@
     </div>
     <div class="col-md-4">
         <h2>Drivers</h2>
-        <p>Drivers can view their trip schedules as well as manage their own timesheets.</p>
+        <p>Drivers can view their trip driving schedules as well as manage their own timesheets.</p>
         <p>@Html.ActionLink("Driver Home", "Home", "Drivers", null, new { @class = "btn btn-default" })</p>
     </div>
     <div class="col-md-4">

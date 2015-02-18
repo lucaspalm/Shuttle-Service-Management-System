@@ -4,8 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Rides R' Us Shuttle Service</title>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 
 </head>
 <body>
@@ -36,15 +39,6 @@
             <p>&copy; @DateTime.Now.Year - Rides R' Us Shuttle Service</p>
         </footer>
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-
-    <link href="~/Content/themes/base/jquery.ui.core.css" rel="stylesheet" />
-    <link href="~/Content/themes/base/jquery.ui.datepicker.css" rel="stylesheet" />
-    <link href="~/Content/themes/base/jquery.ui.theme.css" rel="stylesheet" />
-    <script src="~/Scripts/jquery-ui-1.10.4.js"></script>
-    <script src="~/Scripts/DatePicker.js"></script>
 
     @RenderSection("scripts", required: false)
 </body>

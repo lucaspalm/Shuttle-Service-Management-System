@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace ShuttleServiceManagementSystem.Controllers
 {
+    [Authorize(Roles = "Driver, Administrator")]
     public class DriversController : Controller
     {
         //

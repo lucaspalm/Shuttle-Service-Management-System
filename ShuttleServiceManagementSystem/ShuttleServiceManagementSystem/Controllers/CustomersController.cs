@@ -15,7 +15,7 @@ using SSMSDataModel.DAL;
 
 namespace ShuttleServiceManagementSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Customer, Administrator")]
     public class CustomersController : Controller
     {
         private SDSU_SchoolEntities db = new SDSU_SchoolEntities();
@@ -32,8 +32,9 @@ namespace ShuttleServiceManagementSystem.Controllers
         [HttpGet]
         public ActionResult CreateOrder()
         {
-            ViewBag.DESTINATION_NAME = new SelectList(db.DESTINATIONS, "DESTINATION_NAME", "DESTINATION_CITY");
-            ViewBag.USER_ID = new SelectList(db.USER_ACCOUNTS, "USER_ID", "UserName");
+            // Create a selectlist of destinations to be passed to the view
+            ViewBag.DESTINATION_NAME = new SelectList(db.DESTINATIONS, "DESTINATION_ID", "DESTINATION_NAME");
+
             return View();
         }
 
@@ -59,20 +60,25 @@ namespace ShuttleServiceManagementSystem.Controllers
                 // Get the order date
                 orderDate = DateTime.Now.ToString();
 
-                // Insert the new order info into the orders table
-                //ssms.InsertNewOrderInfo(userID, orderNumber, orderDate, model.DepartureDateTime, model.DepartureAddress,
-                                        //model.DepartureCity, model.DepartureState, model.DepartureZipCode, model.Destination,
-                                        //model.NumberOfPassengers, model.FlightDetails, model.Comments);
+                // Insert the new order info into the ORDERS table
+                ssms.InsertNewOrderInfo(userID, orderNumber, orderDate, model.DepartureDateTime.ToString(), model.DepartureAddress,
+                                        model.DepartureCity, model.DepartureState, model.DepartureZipCode, model.Destination,
+                                        model.NumberOfPassengers, model.FlightDetails, model.Comments);
+
+                // Send a confirmation order to the user
+                ssms.SendOrderConfirmationEmail(userID);
 
                 return RedirectToAction("Home");
             }
             else
+            {
+                ModelState.AddModelError("", "Opps!  Something went wrong!  Please check all your field inputs and try again.");
+            }
+
+            // Create a selectlist of destinations to be passed to the view
+            ViewBag.DESTINATION_NAME = new SelectList(db.DESTINATIONS, "DESTINATION_NAME", "DESTINATION_NAME");
 
             return View(model);
-
-            //ViewBag.DESTINATION_NAME = new SelectList(db.DESTINATIONS, "DESTINATION_NAME", "DESTINATION_CITY", order.DESTINATION_NAME);
-            //ViewBag.USER_ID = new SelectList(db.USER_ACCOUNTS, "USER_ID", "UserName", order.USER_ID);
-            //return View(order);
         }
 	}
 }

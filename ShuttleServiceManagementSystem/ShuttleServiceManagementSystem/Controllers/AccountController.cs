@@ -54,7 +54,10 @@ namespace ShuttleServiceManagementSystem.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
-                    ssms.CreateSystemLog(model.UserName.Trim());  // Create login record log
+
+                    // Create record log for this login
+                    ssms.CreateSystemLog(user.Id);
+
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -89,6 +92,10 @@ namespace ShuttleServiceManagementSystem.Controllers
                 if (result.Succeeded)
                 {
                     await SignInAsync(user, isPersistent: false);
+
+                    // Assign the new user to the default role of "Customer"
+                    ssms.InsertNewUserRole(user.Id, (int)Roles.CUSTOMER);
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -172,6 +179,36 @@ namespace ShuttleServiceManagementSystem.Controllers
         public ActionResult AddProfileInfo()
         {
             return View();
+        }
+
+        //
+        // POST: /Account/Manage
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddProfileInfo(ProfileInfoViewModel model)
+        {
+            // Variable Declarations
+            string userID = "";
+
+            // Check if the state of the model is OK
+            if (ModelState.IsValid)
+            {
+                // Get the user id
+                userID = User.Identity.GetUserId();
+
+                // Insert the user profile info into the USER_INFO table
+                ssms.InsertNewUserInfo(userID, model.FirstName, model.LastName, model.StreetAddress, model.City,
+                                       model.State, model.ZipCode, model.EmailAddress, model.CellNumber,
+                                       model.ReceiveText, model.ReceiveEmail);
+
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Opps!  Something went wrong!  Please check all your field inputs and try again.");
+            }
+
+            return View(model);
         }
 
         //

@@ -82,17 +82,17 @@ namespace ShuttleServiceManagementSystem.Models
 
         [Required]
         [Display(Name = "Email Address")]
+        [EmailAddress]
         public string EmailAddress { get; set; }
 
         [Required]
         [Display(Name = "Cell Number")]
+        [Phone]
         public string CellNumber { get; set; }
 
-        [Required]
         [Display(Name = "Receive Text Alerts?")]
         public bool ReceiveText { get; set; }
 
-        [Required]
         [Display(Name = "Receive Email Alerts?")]
         public bool ReceiveEmail { get; set; }
     }

@@ -23,8 +23,8 @@ namespace SSMSDataModel.DAL
         public string ZIP_CODE { get; set; }
         public string EMAIL_ADDRESS { get; set; }
         public string CELL_NUMBER { get; set; }
-        public string RECEIVE_TEXT { get; set; }
-        public string RECEIVE_EMAIL { get; set; }
+        public Nullable<bool> RECEIVE_TEXT { get; set; }
+        public Nullable<bool> RECEIVE_EMAIL { get; set; }
     
         public virtual USER_ACCOUNTS USER_ACCOUNTS { get; set; }
     }

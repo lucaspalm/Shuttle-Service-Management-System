@@ -12,6 +12,8 @@ using System.Net;
 
 namespace ShuttleServiceManagementSystem.Utilities
 {
+    public enum Roles { CUSTOMER = 1, DRIVER = 2, MANAGER = 3, ADMINISTRATOR = 4 };
+
     public class SSMS_Helper
     {
         private SDSU_SchoolEntities db = new SDSU_SchoolEntities();
@@ -19,7 +21,7 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// <summary>
         /// This method creates a log record that is entered into the database for security purposes.
         /// </summary>
-        public void CreateSystemLog(string username)
+        public void CreateSystemLog(string userid)
         {
             // Variable Declarations
             string userID = "";
@@ -28,7 +30,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Get the ID of the current user
-            userID = GetUserID(username);
+            userID = userid;  // GetUserID(username);
 
             // Get the current datetime
             currentDate = DateTime.Now.ToString();
@@ -84,7 +86,7 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// <param name="cellNumber"></param>
         /// <param name="receiveText"></param>
         /// <param name="receiveEmail"></param>
-        public void InsertNewUserInfo(string userID, string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string emailAddress, string cellNumber, string receiveText, string receiveEmail)
+        public void InsertNewUserInfo(string userID, string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string emailAddress, string cellNumber, bool receiveText, bool receiveEmail)
         {
             // Variable Declarations
             string query = "";
@@ -100,7 +102,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             paramList.Add(new SqlParameter("@streetaddress", streetAddress));
             paramList.Add(new SqlParameter("@city", city));
             paramList.Add(new SqlParameter("@state", state));
-            paramList.Add(new SqlParameter("@zipcode",zipCode ));
+            paramList.Add(new SqlParameter("@zipcode", zipCode));
             paramList.Add(new SqlParameter("@emailaddress", emailAddress));
             paramList.Add(new SqlParameter("@cellnumber", cellNumber));
             paramList.Add(new SqlParameter("@receivetext", receiveText));
@@ -221,14 +223,14 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// <param name="numberOfPassengers"></param>
         /// <param name="flightDetails"></param>
         /// <param name="comments"></param>
-        public void InsertNewOrderInfo(string userID, string orderNumber, string orderDate, string departureDate, string departureStreetAddress, string departureCity, string departureState, string departureZipCode, string destinationName, string numberOfPassengers, string flightDetails, string comments)
+        public void InsertNewOrderInfo(string userID, string orderNumber, string orderDate, string departureDate, string departureStreetAddress, string departureCity, string departureState, string departureZipCode, string destination, string numberOfPassengers, string flightDetails, string comments)
         {
             // Variable Declarations
             string query = "";
             List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Create the query
-            query = "INSERT INTO [SDSU_School].[4Moxie].[ORDERS] VALUES (@ordernumber, @userid, @orderdate, @departuredate, @departurestreetaddress, @departurecity, @departurestate, @departurezipcode, @destinationname, @numberofpassengers, @flightdetails, @comments)";
+            query = "INSERT INTO [SDSU_School].[4Moxie].[ORDERS] VALUES (@ordernumber, @userid, @orderdate, @departuredate, @departurestreetaddress, @departurecity, @departurestate, @departurezipcode, @destination, @numberofpassengers, @flightdetails, @comments)";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@ordernumber", orderNumber));
@@ -239,7 +241,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             paramList.Add(new SqlParameter("@departurecity", departureCity));
             paramList.Add(new SqlParameter("@departurestate", departureState));
             paramList.Add(new SqlParameter("@departurezipcode", departureZipCode));
-            paramList.Add(new SqlParameter("@destinationname", destinationName));
+            paramList.Add(new SqlParameter("@destination", destination));
             paramList.Add(new SqlParameter("@numberofpassengers", numberOfPassengers));
             paramList.Add(new SqlParameter("@flightdetails", flightDetails));
             paramList.Add(new SqlParameter("@comments", comments));
@@ -266,7 +268,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             queryResult = db.Database.SqlQuery<int>(query).FirstOrDefault<int>();
 
             // Return the next order number
-            return Convert.ToInt32(queryResult) + 1;       
+            return Convert.ToInt32(queryResult) + 1;
         }
 
         public void CreateNewTrip(string tripNumber, string driverUserID, string orderNumber)
@@ -327,6 +329,77 @@ namespace ShuttleServiceManagementSystem.Utilities
             return destinationList;
         }
 
+        public string GetUserCellNumber(string userid)
+        {
+            // Variable Declarations
+            string cellNumber = "";
+
+            return cellNumber;
+        }
+
+        public string GetUserEmailAddress(string userid)
+        {
+            // Variable Declarations
+            string query = "";
+            string emailAddress = "";
+
+            // Create the query
+            query = "SELECT EMAIL_ADDRESS FROM [SDSU_School].[4Moxie].[USER_INFO]";
+
+            // Execute the query
+            emailAddress = db.Database.SqlQuery<string>(query).FirstOrDefault<string>();
+
+            return emailAddress;
+        }
+
+        public void InsertNewSystemRole()
+        {
+
+        }
+
+        public void InsertNewUserRole(string userid, int roleid)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "INSERT INTO [SDSU_School].[4Moxie].[USER_ROLES] VALUES (@userid, @roleid)";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userid));
+            paramList.Add(new SqlParameter("@roleid", roleid));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
+        }
+
+        public void UpdateUserRole(string userid, string roleid)
+        {
+
+        }
+
+        /// <summary>
+        /// This method will send an order confirmation email to the specified user.
+        /// </summary>
+        /// <param name="userid"></param>
+        public void SendOrderConfirmationEmail(string userid)
+        {
+            // Variable Declarations
+            string recipientEmail = "";
+            string messageSubject = "";
+            string messageBody = "";
+
+            // Populate the parameters
+            recipientEmail = GetUserEmailAddress(userid);
+            messageSubject = "Trip Order Confirmation";
+            messageBody = "Your order has been successfully placed!";
+
+            // Send the email
+            SendEmail(recipientEmail, messageSubject, messageBody);
+        }
+
         /// <summary>
         /// This method can be used to send an email to someone.
         /// </summary>
@@ -342,13 +415,15 @@ namespace ShuttleServiceManagementSystem.Utilities
             message.Subject = messageSubject;
             message.Body = messageBody;
 
-            // Create a new email account object
+            // Create a new network credentials object object
             NetworkCredential cred = new NetworkCredential("ridesrus.shuttleservice@gmail.com", "ridesrus");
 
             // Setup the smtp client and send the emails
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 465);
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
+            client.UseDefaultCredentials = false;
             client.Credentials = cred;
             client.EnableSsl = true;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.Send(message);
         }
 
