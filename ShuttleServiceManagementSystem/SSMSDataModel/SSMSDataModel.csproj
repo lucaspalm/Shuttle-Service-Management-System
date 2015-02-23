@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\CELL_CARRIERS.cs">
+      <DependentUpon>SSMS_DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DAL\C__MigrationHistory.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>

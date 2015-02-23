@@ -5,6 +5,14 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="SDSU_SchoolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CELL_CARRIERS">
+          <Key>
+            <PropertyRef Name="CARRIER_ID" />
+          </Key>
+          <Property Name="CARRIER_ID" Type="int" Nullable="false" />
+          <Property Name="CARRIER_NAME" Type="varchar" MaxLength="50" />
+          <Property Name="CARRIER_DOMAIN" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="DESTINATIONS">
           <Key>
             <PropertyRef Name="DESTINATION_ID" />
@@ -107,6 +115,7 @@
           <Property Name="ZIP_CODE" Type="char" MaxLength="5" />
           <Property Name="EMAIL_ADDRESS" Type="varchar" MaxLength="50" />
           <Property Name="CELL_NUMBER" Type="char" MaxLength="10" />
+          <Property Name="CELL_CARRIER_ID" Type="int" />
           <Property Name="RECEIVE_TEXT" Type="bit" />
           <Property Name="RECEIVE_EMAIL" Type="bit" />
         </EntityType>
@@ -252,6 +261,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_USER_INFO_CELL_CARRIERS">
+          <End Role="CELL_CARRIERS" Type="Self.CELL_CARRIERS" Multiplicity="0..1" />
+          <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CELL_CARRIERS">
+              <PropertyRef Name="CARRIER_ID" />
+            </Principal>
+            <Dependent Role="USER_INFO">
+              <PropertyRef Name="CELL_CARRIER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_USER_INFO_USER_ACCOUNTS">
           <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1" />
           <End Role="USER_INFO" Type="Self.USER_INFO" Multiplicity="0..1" />
@@ -265,6 +286,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="SDSU_SchoolModelStoreContainer">
+          <EntitySet Name="CELL_CARRIERS" EntityType="Self.CELL_CARRIERS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="DESTINATIONS" EntityType="Self.DESTINATIONS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="DRIVERS_AVAILABILE_HOURS" EntityType="Self.DRIVERS_AVAILABILE_HOURS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="ORDERS" EntityType="Self.ORDERS" Schema="4Moxie" store:Type="Tables" />
@@ -310,6 +332,10 @@
           <AssociationSet Name="FK_SYSTEM_LOGS_SYSTEM_LOGS1" Association="Self.FK_SYSTEM_LOGS_SYSTEM_LOGS1">
             <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
             <End Role="SYSTEM_LOGS" EntitySet="SYSTEM_LOGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USER_INFO_CELL_CARRIERS" Association="Self.FK_USER_INFO_CELL_CARRIERS">
+            <End Role="CELL_CARRIERS" EntitySet="CELL_CARRIERS" />
+            <End Role="USER_INFO" EntitySet="USER_INFO" />
           </AssociationSet>
           <AssociationSet Name="FK_USER_INFO_USER_ACCOUNTS" Association="Self.FK_USER_INFO_USER_ACCOUNTS">
             <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
@@ -471,6 +497,11 @@
             <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
             <End Role="USER_INFO" EntitySet="USER_INFO" />
           </AssociationSet>
+          <EntitySet Name="CELL_CARRIERS" EntityType="SDSU_SchoolModel.CELL_CARRIERS" />
+          <AssociationSet Name="FK_USER_INFO_CELL_CARRIERS" Association="SDSU_SchoolModel.FK_USER_INFO_CELL_CARRIERS">
+            <End Role="CELL_CARRIERS" EntitySet="CELL_CARRIERS" />
+            <End Role="USER_INFO" EntitySet="USER_INFO" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="SYSTEM_LOGS">
           <Key>
@@ -597,6 +628,8 @@
           <Property Name="RECEIVE_TEXT" Type="Boolean" />
           <Property Name="RECEIVE_EMAIL" Type="Boolean" />
           <NavigationProperty Name="USER_ACCOUNTS" Relationship="SDSU_SchoolModel.FK_USER_INFO_USER_ACCOUNTS" FromRole="USER_INFO" ToRole="USER_ACCOUNTS" />
+          <Property Name="CELL_CARRIER_ID" Type="Int32" />
+          <NavigationProperty Name="CELL_CARRIERS" Relationship="SDSU_SchoolModel.FK_USER_INFO_CELL_CARRIERS" FromRole="USER_INFO" ToRole="CELL_CARRIERS" />
         </EntityType>
         <Association Name="FK_USER_INFO_USER_ACCOUNTS">
           <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="1" />
@@ -607,6 +640,27 @@
             </Principal>
             <Dependent Role="USER_INFO">
               <PropertyRef Name="USER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CELL_CARRIERS">
+          <Key>
+            <PropertyRef Name="CARRIER_ID" />
+          </Key>
+          <Property Name="CARRIER_ID" Type="Int32" Nullable="false" />
+          <Property Name="CARRIER_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CARRIER_DOMAIN" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="USER_INFO" Relationship="SDSU_SchoolModel.FK_USER_INFO_CELL_CARRIERS" FromRole="CELL_CARRIERS" ToRole="USER_INFO" />
+        </EntityType>
+        <Association Name="FK_USER_INFO_CELL_CARRIERS">
+          <End Type="SDSU_SchoolModel.CELL_CARRIERS" Role="CELL_CARRIERS" Multiplicity="0..1" />
+          <End Type="SDSU_SchoolModel.USER_INFO" Role="USER_INFO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CELL_CARRIERS">
+              <PropertyRef Name="CARRIER_ID" />
+            </Principal>
+            <Dependent Role="USER_INFO">
+              <PropertyRef Name="CELL_CARRIER_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -751,6 +805,7 @@
           <EntitySetMapping Name="USER_INFO">
             <EntityTypeMapping TypeName="SDSU_SchoolModel.USER_INFO">
               <MappingFragment StoreEntitySet="USER_INFO">
+                <ScalarProperty Name="CELL_CARRIER_ID" ColumnName="CELL_CARRIER_ID" />
                 <ScalarProperty Name="RECEIVE_EMAIL" ColumnName="RECEIVE_EMAIL" />
                 <ScalarProperty Name="RECEIVE_TEXT" ColumnName="RECEIVE_TEXT" />
                 <ScalarProperty Name="CELL_NUMBER" ColumnName="CELL_NUMBER" />
@@ -762,6 +817,15 @@
                 <ScalarProperty Name="LAST_NAME" ColumnName="LAST_NAME" />
                 <ScalarProperty Name="FIRST_NAME" ColumnName="FIRST_NAME" />
                 <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CELL_CARRIERS">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.CELL_CARRIERS">
+              <MappingFragment StoreEntitySet="CELL_CARRIERS">
+                <ScalarProperty Name="CARRIER_DOMAIN" ColumnName="CARRIER_DOMAIN" />
+                <ScalarProperty Name="CARRIER_NAME" ColumnName="CARRIER_NAME" />
+                <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -38,5 +38,6 @@ namespace SSMSDataModel.DAL
         public virtual DbSet<DESTINATION> DESTINATIONS { get; set; }
         public virtual DbSet<ORDER> ORDERS { get; set; }
         public virtual DbSet<USER_INFO> USER_INFO { get; set; }
+        public virtual DbSet<CELL_CARRIERS> CELL_CARRIERS { get; set; }
     }
 }

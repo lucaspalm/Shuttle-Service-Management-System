@@ -22,7 +22,7 @@ namespace ShuttleServiceManagementSystem
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap_superhero.min.css",
+                      "~/Content/bootstrap_yeti.min.css",
                       "~/Content/site.css"));
         }
     }
