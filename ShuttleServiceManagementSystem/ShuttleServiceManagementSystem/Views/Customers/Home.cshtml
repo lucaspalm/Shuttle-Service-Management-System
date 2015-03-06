@@ -3,12 +3,30 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <h2>Create Order</h2>
         <p>
-            Place a shuttle order by clicking the button below.
+            Place a shuttle service order by clicking the button below.
         </p>
         <p>@Html.ActionLink("Create Order", "CreateOrder", "Customers", null, new { @class = "btn btn-default" })</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>My Orders</h2>
+        <p>
+            View, edit, and delete your current orders.
+        </p>
+        <p>@Html.ActionLink("View Orders", "ViewOrders", "Customers", null, new { @class = "btn btn-default" })</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Order History</h2>
+        <p>
+            View the orders that you have placed in the past.
+        </p>
+        <p>@Html.ActionLink("View History", "ViewOrders", "Customers", null, new { @class = "btn btn-default" })</p>
     </div>
 </div>
 

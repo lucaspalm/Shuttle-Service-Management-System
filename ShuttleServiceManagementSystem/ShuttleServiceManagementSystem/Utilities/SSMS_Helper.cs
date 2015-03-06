@@ -223,7 +223,7 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// <param name="numberOfPassengers"></param>
         /// <param name="flightDetails"></param>
         /// <param name="comments"></param>
-        public void InsertNewOrderInfo(string userID, string orderNumber, string orderDate, string departureDate, string departureStreetAddress, string departureCity, string departureState, string departureZipCode, string destination, string numberOfPassengers, string flightDetails, string comments)
+        public void InsertNewOrderInfo(string userID, string orderNumber, string orderDate, string departureDate, string departureStreetAddress, string departureCity, string departureState, string departureZipCode, string destinationID, string numberOfPassengers, string flightDetails, string comments)
         {
             // Variable Declarations
             string query = "";
@@ -241,7 +241,49 @@ namespace ShuttleServiceManagementSystem.Utilities
             paramList.Add(new SqlParameter("@departurecity", departureCity));
             paramList.Add(new SqlParameter("@departurestate", departureState));
             paramList.Add(new SqlParameter("@departurezipcode", departureZipCode));
-            paramList.Add(new SqlParameter("@destination", destination));
+            paramList.Add(new SqlParameter("@destinationID", destinationID));
+            paramList.Add(new SqlParameter("@numberofpassengers", numberOfPassengers));
+            paramList.Add(new SqlParameter("@flightdetails", flightDetails));
+            paramList.Add(new SqlParameter("@comments", comments));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
+        }
+
+        /// <summary>
+        /// This method will update/submit changes to the specified order.
+        /// </summary>
+        /// <param name="orderNumber"></param>
+        /// <param name="orderDate"></param>
+        /// <param name="departureDate"></param>
+        /// <param name="departureStreetAddress"></param>
+        /// <param name="departureCity"></param>
+        /// <param name="departureState"></param>
+        /// <param name="departureZipCode"></param>
+        /// <param name="destinationID"></param>
+        /// <param name="numberOfPassengers"></param>
+        /// <param name="flightDetails"></param>
+        /// <param name="comments"></param>
+        public void UpdateOrderInfo(string orderNumber, string departureDate, string departureStreetAddress, string departureCity, string departureState, string departureZipCode, string destinationID, string numberOfPassengers, string flightDetails, string comments)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "UPDATE [SDSU_School].[4Moxie].[ORDERS] SET DEPARTURE_DATETIME = @departuredate, DEPARTURE_STREET_ADDRESS = @departurestreetaddress," +
+                    "DEPARTURE_CITY = @departurecity, DEPARTURE_STATE = @departurestate, DEPARTURE_ZIPCODE = @departurezipcode, DESTINATION_ID = @destinationID," +
+                    "NUMBER_OF_PASSENGERS = @numberofpassengers, FLIGHT_DETAILS = @flightdetails, COMMENTS = @comments WHERE ORDER_NUMBER = @ordernumber";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@ordernumber", orderNumber));
+            paramList.Add(new SqlParameter("@departuredate", departureDate));
+            paramList.Add(new SqlParameter("@departurestreetaddress", departureStreetAddress));
+            paramList.Add(new SqlParameter("@departurecity", departureCity));
+            paramList.Add(new SqlParameter("@departurestate", departureState));
+            paramList.Add(new SqlParameter("@departurezipcode", departureZipCode));
+            paramList.Add(new SqlParameter("@destinationID", destinationID));
             paramList.Add(new SqlParameter("@numberofpassengers", numberOfPassengers));
             paramList.Add(new SqlParameter("@flightdetails", flightDetails));
             paramList.Add(new SqlParameter("@comments", comments));
@@ -284,21 +326,26 @@ namespace ShuttleServiceManagementSystem.Utilities
         }
 
         /// <summary>
-        /// This method will return a list of all of the specified user's orders.
+        /// This method will return a list of all the current orders for the specified user.
         /// </summary>
         /// <param name="userid"></param>
         /// <returns>List<ORDER></returns>
-        public List<ORDER> GetAllUserOrders(string userid)
+        public List<ORDER> GetCurrentUserOrders(string userid)
         {
             // Variable Declarations
             string query = "";
+            string currentDate = "";
             List<SqlParameter> paramList = new List<SqlParameter>();
 
+            // Get todays date/time
+            currentDate = DateTime.Now.ToString();
+
             // Create the query
-            query = "SELECT * FROM [SDSU_School].[4Moxie].[ORDERS] WHERE USER_ID = @userid";
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[ORDERS] WHERE USER_ID = @userid AND DEPARTURE_DATETIME > @currentdate";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@userid", userid));
+            paramList.Add(new SqlParameter("@currentdate", currentDate));
             SqlParameter[] parameters = paramList.ToArray();
 
             // Execute the query
@@ -306,7 +353,36 @@ namespace ShuttleServiceManagementSystem.Utilities
 
             // Return the list of orders
             return orderList;
+        }
 
+        /// <summary>
+        /// This method will return a list of all the past orders for the specified user.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public List<ORDER> GetPastUserOrders(string userid)
+        {
+            // Variable Declarations
+            string query = "";
+            string currentDate = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Get todays date/time
+            currentDate = DateTime.Now.ToString();
+
+            // Create the query
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[ORDERS] WHERE USER_ID = @userid AND DEPARTURE_DATETIME < @currentdate";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userid));
+            paramList.Add(new SqlParameter("@currentdate", currentDate));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            var orderList = db.ORDERS.SqlQuery(query, parameters).ToList<ORDER>();
+
+            // Return the list of orders
+            return orderList;
         }
 
         public void GetUserInfo(string userid)
@@ -378,6 +454,26 @@ namespace ShuttleServiceManagementSystem.Utilities
         public void UpdateUserRole(string userid, string roleid)
         {
 
+        }
+
+        public string GetDestinationName(string destinationid)
+        {
+            // Variable Declarations
+            string destinationName = "";
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT DESTINATION_NAME FROM [SDSU_School].[4Moxie].[DESTINATIONS] WHERE DESTINATION_ID = @destinationid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@destinationid", destinationid));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            destinationName = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
+
+            return destinationName;
         }
 
         /// <summary>

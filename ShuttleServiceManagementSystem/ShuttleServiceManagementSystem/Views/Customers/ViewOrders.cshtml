@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ShuttleServiceManagementSystem.Models.ViewOrdersViewModel>
+
+@{
+    ViewBag.Title = "View Orders";
+}
+
+<h2>My Orders</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartureDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DestinationName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestinationName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditOrder", new { id = item.OrderNumber }) |
+                @Html.ActionLink("Details", "OrderDetails", new { id = item.OrderNumber }) |
+                @Html.ActionLink("Delete", "DeleteOrder", new { id = item.OrderNumber })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div>
+    @Html.ActionLink("Customer Home", "Home", "Customers")
+</div>
