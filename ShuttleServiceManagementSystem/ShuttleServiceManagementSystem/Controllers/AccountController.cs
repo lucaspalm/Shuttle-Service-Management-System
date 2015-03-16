@@ -17,6 +17,8 @@ namespace ShuttleServiceManagementSystem.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private SDSU_SchoolEntities db = new SDSU_SchoolEntities();
+
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
@@ -178,6 +180,9 @@ namespace ShuttleServiceManagementSystem.Controllers
         // GET: /Account/AddProfileInfo
         public ActionResult AddProfileInfo()
         {
+            // Create a selectlist of destinations to be passed to the view
+            ViewBag.CELL_CARRIER_NAME = new SelectList(db.CELL_CARRIERS, "CARRIER_ID", "CARRIER_NAME");
+
             return View();
         }
 
@@ -198,7 +203,7 @@ namespace ShuttleServiceManagementSystem.Controllers
 
                 // Insert the user profile info into the USER_INFO table
                 ssms.InsertNewUserInfo(userID, model.FirstName, model.LastName, model.StreetAddress, model.City,
-                                       model.State, model.ZipCode, model.EmailAddress, model.CellNumber,
+                                       model.State, model.ZipCode, model.EmailAddress, model.CellNumber, model.CellCarrierID.ToString(),
                                        model.ReceiveText, model.ReceiveEmail);
 
                 return RedirectToAction("Index", "Home");

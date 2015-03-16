@@ -86,14 +86,14 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// <param name="cellNumber"></param>
         /// <param name="receiveText"></param>
         /// <param name="receiveEmail"></param>
-        public void InsertNewUserInfo(string userID, string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string emailAddress, string cellNumber, bool receiveText, bool receiveEmail)
+        public void InsertNewUserInfo(string userID, string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string emailAddress, string cellNumber, string cellCarrierID, bool receiveText, bool receiveEmail)
         {
             // Variable Declarations
             string query = "";
             List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Create the query
-            query = "INSERT INTO [SDSU_School].[4Moxie].[USER_INFO] VALUES (@userid, @firstname, @lastname, @streetaddress, @city, @state, @zipcode, @emailaddress, @cellnumber, @receivetext, @receiveemail)";
+            query = "INSERT INTO [SDSU_School].[4Moxie].[USER_INFO] VALUES (@userid, @firstname, @lastname, @streetaddress, @city, @state, @zipcode, @emailaddress, @cellnumber, @cellcarrierid, @receivetext, @receiveemail)";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@userid", userID));
@@ -104,6 +104,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             paramList.Add(new SqlParameter("@state", state));
             paramList.Add(new SqlParameter("@zipcode", zipCode));
             paramList.Add(new SqlParameter("@emailaddress", emailAddress));
+            paramList.Add(new SqlParameter("@cellcarrierid", cellCarrierID));
             paramList.Add(new SqlParameter("@cellnumber", cellNumber));
             paramList.Add(new SqlParameter("@receivetext", receiveText));
             paramList.Add(new SqlParameter("@receiveemail", receiveEmail));

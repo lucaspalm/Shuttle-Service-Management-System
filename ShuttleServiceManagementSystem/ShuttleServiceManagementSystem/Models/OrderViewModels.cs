@@ -94,7 +94,7 @@ namespace ShuttleServiceManagementSystem.Models
         public string DestinationName { get; set; }
 
         [Display(Name = "Passengers")]
-        public int NumberOfPassengers { get; set; }
+        public Nullable<int> NumberOfPassengers { get; set; }
 
         [Display(Name = "Flight Details")]
         public string FlightDetails { get; set; }

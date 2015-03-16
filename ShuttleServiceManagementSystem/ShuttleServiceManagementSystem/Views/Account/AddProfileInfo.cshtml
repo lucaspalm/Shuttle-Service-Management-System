@@ -4,10 +4,6 @@
     ViewBag.Title = "Add Profile Info";
 }
 
-<script type="text/javascript">
-        alert(@TempData["alert"]);
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm())
@@ -80,6 +76,14 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.CellNumber)
                 @Html.ValidationMessageFor(model => model.CellNumber)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CellCarrierID, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CellCarrierID, ViewBag.CELL_CARRIER_NAME as SelectList, "Select Cell Carrier")
+                @Html.ValidationMessageFor(model => model.CellCarrierID)
             </div>
         </div>
 

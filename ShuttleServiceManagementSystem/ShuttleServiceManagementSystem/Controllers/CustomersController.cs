@@ -69,6 +69,17 @@ namespace ShuttleServiceManagementSystem.Controllers
                 // Get the order date
                 orderDate = DateTime.Now.ToString();
 
+                // Check if the "flight details" and "comment" fields have been left blank
+                if (model.FlightDetails == null)
+                {
+                    model.FlightDetails = "";
+                }
+
+                if (model.Comments == null)
+                {
+                    model.Comments = "";
+                }
+
                 // Insert the new order info into the ORDERS table
                 ssms.InsertNewOrderInfo(userID, orderNumber, orderDate, model.DepartureDate.ToString(), model.DepartureAddress,
                                         model.DepartureCity, model.DepartureState, model.DepartureZipCode, model.DestinationID.ToString(),
@@ -155,6 +166,7 @@ namespace ShuttleServiceManagementSystem.Controllers
                 model.DepartureState = order.DEPARTURE_STATE;
                 model.DepartureZipCode = order.DEPARTURE_ZIPCODE;
                 model.DestinationName = ssms.GetDestinationName(order.DESTINATION_ID.ToString());
+                model.NumberOfPassengers = order.NUMBER_OF_PASSENGERS;
                 model.FlightDetails = order.FLIGHT_DETAILS;
                 model.Comments = order.COMMENTS;
             }
