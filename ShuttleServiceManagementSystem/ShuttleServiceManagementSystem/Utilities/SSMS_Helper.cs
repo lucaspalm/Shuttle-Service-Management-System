@@ -230,7 +230,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Create the query
-            query = "INSERT INTO [SDSU_School].[4Moxie].[ORDERS] VALUES (@ordernumber, @userid, @orderdate, @departuredate, @departurestreetaddress, @departurecity, @departurestate, @departurezipcode, @destination, @numberofpassengers, @flightdetails, @comments)";
+            query = "INSERT INTO [SDSU_School].[4Moxie].[ORDERS] VALUES (@ordernumber, @userid, @orderdate, @departuredate, @departurestreetaddress, @departurecity, @departurestate, @departurezipcode, @destinationID, @numberofpassengers, @flightdetails, @comments)";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@ordernumber", orderNumber));
@@ -311,6 +311,31 @@ namespace ShuttleServiceManagementSystem.Utilities
 
             // Return the next order number
             return Convert.ToInt32(queryResult) + 1;
+        }
+
+        public int GetNextAvailableID()
+        {
+            // Variable Declarations
+            string query = "";
+            int queryResult = 0;
+
+            // Create the query
+            query = "SELECT ISNULL(MAX(ORDER_NUMBER), 0) FROM [SDSU_School].[4Moxie].[ORDERS]";
+
+            // Execute the query
+            queryResult = db.Database.SqlQuery<int>(query).FirstOrDefault<int>();
+
+            // Return the next order number
+            return Convert.ToInt32(queryResult) + 1;
+        }
+
+        public List<string> GetDriverTimesheetInfo(string driverID)
+        {
+            // Variable Declarations
+            List<string> timesheetEvents = new List<string>();
+
+
+            return timesheetEvents;
         }
 
         public void CreateNewTrip(string tripNumber, string driverUserID, string orderNumber)

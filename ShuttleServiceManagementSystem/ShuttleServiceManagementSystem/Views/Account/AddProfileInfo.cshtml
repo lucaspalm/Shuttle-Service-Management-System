@@ -4,12 +4,16 @@
     ViewBag.Title = "Add Profile Info";
 }
 
+<script type="text/javascript">
+        alert(@TempData["alert"]);
+</script>
+
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Fill in the following fields to add profile information to your account.</h4>
         <hr />

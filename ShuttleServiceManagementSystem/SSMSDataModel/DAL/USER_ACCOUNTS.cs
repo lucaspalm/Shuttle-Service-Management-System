@@ -20,7 +20,6 @@ namespace SSMSDataModel.DAL
             this.USER_LOGINS = new HashSet<USER_LOGINS>();
             this.SYSTEM_ROLES = new HashSet<SYSTEM_ROLES>();
             this.SYSTEM_LOGS = new HashSet<SYSTEM_LOGS>();
-            this.DRIVERS_AVAILABILE_HOURS = new HashSet<DRIVERS_AVAILABILE_HOURS>();
             this.ORDERS = new HashSet<ORDER>();
         }
     
@@ -34,8 +33,8 @@ namespace SSMSDataModel.DAL
         public virtual ICollection<USER_LOGINS> USER_LOGINS { get; set; }
         public virtual ICollection<SYSTEM_ROLES> SYSTEM_ROLES { get; set; }
         public virtual ICollection<SYSTEM_LOGS> SYSTEM_LOGS { get; set; }
-        public virtual ICollection<DRIVERS_AVAILABILE_HOURS> DRIVERS_AVAILABILE_HOURS { get; set; }
         public virtual ICollection<ORDER> ORDERS { get; set; }
         public virtual USER_INFO USER_INFO { get; set; }
+        public virtual DRIVERS_AVAILABILITY DRIVERS_AVAILABILITY { get; set; }
     }
 }

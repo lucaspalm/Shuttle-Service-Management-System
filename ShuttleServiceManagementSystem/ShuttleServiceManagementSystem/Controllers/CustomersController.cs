@@ -33,10 +33,18 @@ namespace ShuttleServiceManagementSystem.Controllers
         [HttpGet]
         public ActionResult CreateOrder()
         {
-            // Create a selectlist of destinations to be passed to the view
-            ViewBag.DESTINATION_NAME = new SelectList(db.DESTINATIONS, "DESTINATION_ID", "DESTINATION_NAME");
+            if (ssms.CheckIfUserInfoExists(User.Identity.GetUserId()))
+            {
+                // Create a selectlist of destinations to be passed to the view
+                ViewBag.DESTINATION_NAME = new SelectList(db.DESTINATIONS, "DESTINATION_ID", "DESTINATION_NAME");
 
-            return View();
+                return View();
+            }
+            else
+            {
+                //TempData["alert"] = "You must first add your profile information before you can create an order.";
+                return RedirectToAction("AddProfileInfo", "Account");
+            }           
         }
 
         // POST: /Customers/CreateOrder

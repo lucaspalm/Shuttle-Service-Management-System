@@ -58,7 +58,7 @@
     <Compile Include="DAL\DESTINATION.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="DAL\DRIVERS_AVAILABILE_HOURS.cs">
+    <Compile Include="DAL\DRIVERS_AVAILABILITY.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DAL\ORDER.cs">

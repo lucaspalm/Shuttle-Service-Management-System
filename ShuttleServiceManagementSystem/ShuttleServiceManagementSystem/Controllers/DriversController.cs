@@ -37,10 +37,32 @@ namespace ShuttleServiceManagementSystem.Controllers
             return View();
         }
 
-        // GET: /Drivers/SaveNewAvailability
-        public void AddNewAvailability()
+        // GET: /Drivers/GetDriverTimesheet
+        public void GetDriverTimesheet(double start, double end)
         {
+            // Variable Declarations
+            //var timesheetEvents = ssms.GetDriverTimesheet(User.Identity.GetUserId());
 
+
+
+
+            //var rows = timesheetEvents.ToArray();
+
+            //return Json(rows, JsonRequestBehavior.AllowGet);
         }
-	}
+
+        // GET: /Drivers/SaveNewAvailability
+        [HttpPost]
+        public bool SaveNewAvailability(string NewAvailabilityDate, string NewAvailabilityStartTime, string NewAvailabilityEndTime)
+        {
+            // Variable Declarations
+            string a = NewAvailabilityDate;
+            string b = NewAvailabilityStartTime;
+            string c = NewAvailabilityEndTime;
+
+            string answer = a + b + c;
+
+            return true;
+        }
+    }
 }

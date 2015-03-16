@@ -24,15 +24,15 @@
           <Property Name="DESTINATION_STATE" Type="varchar" MaxLength="50" />
           <Property Name="DESTINATION_ZIPCODE" Type="char" MaxLength="5" />
         </EntityType>
-        <EntityType Name="DRIVERS_AVAILABILE_HOURS">
+        <EntityType Name="DRIVERS_AVAILABILITY">
           <Key>
-            <PropertyRef Name="USER_ID" />
-            <PropertyRef Name="DATE" />
+            <PropertyRef Name="ID" />
           </Key>
-          <Property Name="USER_ID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="DRIVER_USER_ID" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="DATE" Type="date" Nullable="false" />
-          <Property Name="START_TIME" Type="time" Precision="7" />
-          <Property Name="END_TIME" Type="time" Precision="7" />
+          <Property Name="START_TIME" Type="time" Precision="7" Nullable="false" />
+          <Property Name="END_TIME" Type="time" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="ORDERS">
           <Key>
@@ -215,13 +215,13 @@
         </Association>
         <Association Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
           <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="1" />
-          <End Role="DRIVERS_AVAILABILE_HOURS" Type="Self.DRIVERS_AVAILABILE_HOURS" Multiplicity="*" />
+          <End Role="DRIVERS_AVAILABILITY" Type="Self.DRIVERS_AVAILABILITY" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="USER_ACCOUNTS">
               <PropertyRef Name="USER_ID" />
             </Principal>
-            <Dependent Role="DRIVERS_AVAILABILE_HOURS">
-              <PropertyRef Name="USER_ID" />
+            <Dependent Role="DRIVERS_AVAILABILITY">
+              <PropertyRef Name="ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -288,7 +288,7 @@
         <EntityContainer Name="SDSU_SchoolModelStoreContainer">
           <EntitySet Name="CELL_CARRIERS" EntityType="Self.CELL_CARRIERS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="DESTINATIONS" EntityType="Self.DESTINATIONS" Schema="4Moxie" store:Type="Tables" />
-          <EntitySet Name="DRIVERS_AVAILABILE_HOURS" EntityType="Self.DRIVERS_AVAILABILE_HOURS" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="DRIVERS_AVAILABILITY" EntityType="Self.DRIVERS_AVAILABILITY" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="ORDERS" EntityType="Self.ORDERS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="SYSTEM_LOGS" EntityType="Self.SYSTEM_LOGS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="SYSTEM_ROLES" EntityType="Self.SYSTEM_ROLES" Schema="4Moxie" store:Type="Tables" />
@@ -319,7 +319,7 @@
           </AssociationSet>
           <AssociationSet Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" Association="Self.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
             <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
-            <End Role="DRIVERS_AVAILABILE_HOURS" EntitySet="DRIVERS_AVAILABILE_HOURS" />
+            <End Role="DRIVERS_AVAILABILITY" EntitySet="DRIVERS_AVAILABILITY" />
           </AssociationSet>
           <AssociationSet Name="FK_ORDERS_DESTINATIONS" Association="Self.FK_ORDERS_DESTINATIONS">
             <End Role="DESTINATIONS" EntitySet="DESTINATIONS" />
@@ -374,9 +374,9 @@
           <NavigationProperty Name="USER_LOGINS" Relationship="Self.FK_4Moxie_USER_LOGINS_4Moxie_USER_ACCOUNTS_UserId" FromRole="USER_ACCOUNTS" ToRole="USER_LOGINS" />
           <NavigationProperty Name="SYSTEM_ROLES" Relationship="Self.USER_ROLES" FromRole="USER_ACCOUNTS" ToRole="SYSTEM_ROLES" />
           <NavigationProperty Name="SYSTEM_LOGS" Relationship="SDSU_SchoolModel.FK_SYSTEM_LOGS_SYSTEM_LOGS1" FromRole="USER_ACCOUNTS" ToRole="SYSTEM_LOGS" />
-          <NavigationProperty Name="DRIVERS_AVAILABILE_HOURS" Relationship="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" FromRole="USER_ACCOUNTS" ToRole="DRIVERS_AVAILABILE_HOURS" />
           <NavigationProperty Name="ORDERS" Relationship="SDSU_SchoolModel.FK_ORDERS_USER_ACCOUNTS" FromRole="USER_ACCOUNTS" ToRole="ORDER" />
           <NavigationProperty Name="USER_INFO" Relationship="SDSU_SchoolModel.FK_USER_INFO_USER_ACCOUNTS" FromRole="USER_ACCOUNTS" ToRole="USER_INFO" />
+          <NavigationProperty Name="DRIVERS_AVAILABILITY" Relationship="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" FromRole="USER_ACCOUNTS" ToRole="DRIVERS_AVAILABILITY" />
         </EntityType>
         <EntityType Name="USER_CLAIMS">
           <Key>
@@ -476,11 +476,6 @@
             <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
             <End Role="SYSTEM_LOGS" EntitySet="SYSTEM_LOGS" />
           </AssociationSet>
-          <EntitySet Name="DRIVERS_AVAILABILE_HOURS" EntityType="SDSU_SchoolModel.DRIVERS_AVAILABILE_HOURS" />
-          <AssociationSet Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" Association="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
-            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
-            <End Role="DRIVERS_AVAILABILE_HOURS" EntitySet="DRIVERS_AVAILABILE_HOURS" />
-          </AssociationSet>
           <EntitySet Name="TRIPS" EntityType="SDSU_SchoolModel.TRIP" />
           <EntitySet Name="DESTINATIONS" EntityType="SDSU_SchoolModel.DESTINATION" />
           <EntitySet Name="ORDERS" EntityType="SDSU_SchoolModel.ORDER" />
@@ -502,6 +497,11 @@
             <End Role="CELL_CARRIERS" EntitySet="CELL_CARRIERS" />
             <End Role="USER_INFO" EntitySet="USER_INFO" />
           </AssociationSet>
+          <EntitySet Name="DRIVERS_AVAILABILITY" EntityType="SDSU_SchoolModel.DRIVERS_AVAILABILITY" />
+          <AssociationSet Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" Association="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="DRIVERS_AVAILABILITY" EntitySet="DRIVERS_AVAILABILITY" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="SYSTEM_LOGS">
           <Key>
@@ -520,29 +520,6 @@
               <PropertyRef Name="USER_ID" />
             </Principal>
             <Dependent Role="SYSTEM_LOGS">
-              <PropertyRef Name="USER_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="DRIVERS_AVAILABILE_HOURS">
-          <Key>
-            <PropertyRef Name="USER_ID" />
-            <PropertyRef Name="DATE" />
-          </Key>
-          <Property Name="USER_ID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="DATE" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="START_TIME" Type="Time" Precision="7" />
-          <Property Name="END_TIME" Type="Time" Precision="7" />
-          <NavigationProperty Name="USER_ACCOUNTS" Relationship="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" FromRole="DRIVERS_AVAILABILE_HOURS" ToRole="USER_ACCOUNTS" />
-        </EntityType>
-        <Association Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
-          <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="1" />
-          <End Type="SDSU_SchoolModel.DRIVERS_AVAILABILE_HOURS" Role="DRIVERS_AVAILABILE_HOURS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USER_ACCOUNTS">
-              <PropertyRef Name="USER_ID" />
-            </Principal>
-            <Dependent Role="DRIVERS_AVAILABILE_HOURS">
               <PropertyRef Name="USER_ID" />
             </Dependent>
           </ReferentialConstraint>
@@ -664,6 +641,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="DRIVERS_AVAILABILITY">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="DRIVER_USER_ID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="DATE" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="START_TIME" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="END_TIME" Type="Time" Nullable="false" Precision="7" />
+          <NavigationProperty Name="USER_ACCOUNTS" Relationship="SDSU_SchoolModel.FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS" FromRole="DRIVERS_AVAILABILITY" ToRole="USER_ACCOUNTS" />
+        </EntityType>
+        <Association Name="FK_DRIVERS_AVAILABILE_HOURS_USER_ACCOUNTS">
+          <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="1" />
+          <End Type="SDSU_SchoolModel.DRIVERS_AVAILABILITY" Role="DRIVERS_AVAILABILITY" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="DRIVERS_AVAILABILITY">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -753,16 +753,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DRIVERS_AVAILABILE_HOURS">
-            <EntityTypeMapping TypeName="SDSU_SchoolModel.DRIVERS_AVAILABILE_HOURS">
-              <MappingFragment StoreEntitySet="DRIVERS_AVAILABILE_HOURS">
-                <ScalarProperty Name="END_TIME" ColumnName="END_TIME" />
-                <ScalarProperty Name="START_TIME" ColumnName="START_TIME" />
-                <ScalarProperty Name="DATE" ColumnName="DATE" />
-                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TRIPS">
             <EntityTypeMapping TypeName="SDSU_SchoolModel.TRIP">
               <MappingFragment StoreEntitySet="TRIPS">
@@ -826,6 +816,17 @@
                 <ScalarProperty Name="CARRIER_DOMAIN" ColumnName="CARRIER_DOMAIN" />
                 <ScalarProperty Name="CARRIER_NAME" ColumnName="CARRIER_NAME" />
                 <ScalarProperty Name="CARRIER_ID" ColumnName="CARRIER_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DRIVERS_AVAILABILITY">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.DRIVERS_AVAILABILITY">
+              <MappingFragment StoreEntitySet="DRIVERS_AVAILABILITY">
+                <ScalarProperty Name="END_TIME" ColumnName="END_TIME" />
+                <ScalarProperty Name="START_TIME" ColumnName="START_TIME" />
+                <ScalarProperty Name="DATE" ColumnName="DATE" />
+                <ScalarProperty Name="DRIVER_USER_ID" ColumnName="DRIVER_USER_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

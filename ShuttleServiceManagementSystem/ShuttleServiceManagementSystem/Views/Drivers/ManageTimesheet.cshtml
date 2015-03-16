@@ -14,7 +14,7 @@
             defaultView: 'agendaWeek',
             editable: true,
             selectable: true,
-            events: '/Customers/GetUserTimesheet',
+            events: '/Drivers/GetDriverTimesheet',
             select: function (start, end, allDay) {
                 $('#date').val(moment(start).format('DD/MM/YYYY'));
                 $('#startTime').val(moment(start).format('HH:mm:ss'));
@@ -35,28 +35,39 @@
 
 <script type="text/javascript">
     function ShowModalPopup() {
-        //ClearModalFormValues();
         $('#newEventModal').modal('show');
         $('#startTime').focus();
     };
 </script>
 
 <script type="text/javascript">
-    $('#btnPopupSave').click(function () {
-        $('#newEventModal').modal('hide');
-        var dataRow = {
-            'NewEventDate': $('#date').val(),
-            'NewEventTime': $('#eventTime').val(),
-        }
+    function CancelNewEvent() {
         ClearModalFormValues();
+        $('#newEventModal').modal('hide');
+    };
+</script>
+
+<script type="text/javascript">
+    function SaveNewEvent() {
+        $('#newEventModal').modal('show');
+
+        var dataRow = {
+            'NewAvailabilityDate': $('#date').val(),
+            'NewAvailabilityStartTime': $('#startTime').val(),
+            'NewAvailabilityEndTime': $('#endTime').val()
+        }
+
+        ClearModalFormValues();
+
         $.ajax({
             type: 'POST',
-            url: '/Drivers/SaveNewAvailability',
+            url: "/Drivers/SaveNewAvailability",
             data: dataRow,
             datatype: 'json',
             success: function (response) {
                 if (response == 'True') {
                     $('#calendar').fullCalendar('refetchEvents');
+                    $('#newEventModal').modal('hide');
                     alert('New availability saved!');
                 }
                 else {
@@ -64,7 +75,7 @@
                 }
             }
         });
-    });
+    };
 </script>
 
 <h2>My Timesheet</h2>
@@ -77,16 +88,16 @@
             <div class="modal-body">
                 <form id="EventForm" class="well">
                     <label>Date</label><br />
-                    <input type="text" id="date"><br /><br />
+                    <input type="text" id="date" readonly><br /><br />
                     <label>Available Start Time</label><br />
-                    <input type="text" id="startTime"><br /><br />
+                    <input type="text" id="startTime" readonly><br /><br />
                     <label>Available End Time</label><br />
-                    <input type="text" id="endTime"><br />
+                    <input type="text" id="endTime" readonly><br />
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnPopupCancel" data-dismiss="modal" class="btn">Cancel</button>
-                <button type="button" id="btnPopupSave" data-dismiss="modal" class="btn btn-primary">Save</button>
+                <button type="button" id="btnPopupCancel" class="btn" onclick="CancelNewEvent()">Cancel</button>
+                <button type="button" id="btnPopupSave" class="btn btn-primary" onclick="SaveNewEvent()">Save</button>
             </div>
         </div>
     </div>
