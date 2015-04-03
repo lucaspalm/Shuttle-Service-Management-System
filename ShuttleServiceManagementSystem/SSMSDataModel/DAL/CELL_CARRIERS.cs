@@ -14,15 +14,8 @@ namespace SSMSDataModel.DAL
     
     public partial class CELL_CARRIERS
     {
-        public CELL_CARRIERS()
-        {
-            this.USER_INFO = new HashSet<USER_INFO>();
-        }
-    
         public int CARRIER_ID { get; set; }
         public string CARRIER_NAME { get; set; }
         public string CARRIER_DOMAIN { get; set; }
-    
-        public virtual ICollection<USER_INFO> USER_INFO { get; set; }
     }
 }

@@ -111,8 +111,8 @@ namespace ShuttleServiceManagementSystem.Controllers
         }
 
         //
-        // GET: /Account/Manage
-        public ActionResult Manage(ManageMessageId? message)
+        // GET: /Account/ResetPassword
+        public ActionResult ResetPassword(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
@@ -126,10 +126,10 @@ namespace ShuttleServiceManagementSystem.Controllers
         }
 
         //
-        // POST: /Account/Manage
+        // POST: /Account/ResetPassword
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Manage(ManageUserViewModel model)
+        public async Task<ActionResult> ResetPassword(ManageUserViewModel model)
         {
             bool hasPassword = HasPassword();
             ViewBag.HasLocalPassword = hasPassword;
@@ -141,7 +141,7 @@ namespace ShuttleServiceManagementSystem.Controllers
                     IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+                        return RedirectToAction("ResetPassword", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
                     else
                     {
@@ -177,20 +177,52 @@ namespace ShuttleServiceManagementSystem.Controllers
         }
 
         //
-        // GET: /Account/AddProfileInfo
-        public ActionResult AddProfileInfo()
+        // GET: /Account/ManageProfileInfo
+        public ActionResult ManageProfileInfo()
         {
+            // Variable Declarations
+            USER_INFO userInfo = new USER_INFO();
+            ProfileInfoViewModel model = new ProfileInfoViewModel();
+
             // Create a selectlist of destinations to be passed to the view
             ViewBag.CELL_CARRIER_NAME = new SelectList(db.CELL_CARRIERS, "CARRIER_ID", "CARRIER_NAME");
 
-            return View();
+            // Check if the user already has entered their profile information before
+            if (ssms.CheckIfUserInfoExists(User.Identity.GetUserId()))
+            {
+                ViewBag.PageInstruction = "Make your desired profile changes by editing the fields below and clicking the \"Submit\" button.";
+
+                // Get the users current profile info
+                userInfo = ssms.GetUserProfileInfo(User.Identity.GetUserId());
+
+                // Populate the view model
+                model.FirstName = userInfo.FIRST_NAME;
+                model.LastName = userInfo.LAST_NAME;
+                model.StreetAddress = userInfo.STREET_ADDRESS;
+                model.City = userInfo.CITY;
+                model.State = userInfo.STATE;
+                model.ZipCode = userInfo.ZIP_CODE;
+                model.EmailAddress = userInfo.EMAIL_ADDRESS;
+                model.CellNumber = userInfo.CELL_NUMBER;
+                model.CellCarrierID = userInfo.CELL_CARRIER_ID;
+                model.ReceiveText = userInfo.RECEIVE_TEXT;
+                model.ReceiveEmail = userInfo.RECEIVE_EMAIL;
+
+                return View(model);
+            }
+            else
+            {
+                ViewBag.PageInstruction = "Fill in the following fields and click the \"Submit\" button below to add your profile information to your account.";
+
+                return View();
+            }
         }
 
         //
-        // POST: /Account/Manage
+        // POST: /Account/ManageProfileInfo
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddProfileInfo(ProfileInfoViewModel model)
+        public ActionResult ManageProfileInfo(ProfileInfoViewModel model)
         {
             // Variable Declarations
             string userID = "";
@@ -201,10 +233,25 @@ namespace ShuttleServiceManagementSystem.Controllers
                 // Get the user id
                 userID = User.Identity.GetUserId();
 
-                // Insert the user profile info into the USER_INFO table
-                ssms.InsertNewUserInfo(userID, model.FirstName, model.LastName, model.StreetAddress, model.City,
-                                       model.State, model.ZipCode, model.EmailAddress, model.CellNumber, model.CellCarrierID.ToString(),
-                                       model.ReceiveText, model.ReceiveEmail);
+                // Check if this is an Edit or an Add operation
+                if (ssms.CheckIfUserInfoExists(userID))
+                {
+                    // This is an edit operation
+
+                    // Update the user's profile info
+                    ssms.UpdateUserInfo(userID, model.FirstName, model.LastName, model.StreetAddress, model.City,
+                                           model.State, model.ZipCode, model.EmailAddress, model.CellNumber.Replace("-", ""), model.CellCarrierID.ToString(),
+                                           Convert.ToBoolean(model.ReceiveText), Convert.ToBoolean(model.ReceiveEmail));
+                }
+                else
+                {
+                    // This is an add operation
+
+                    // Insert the user profile info into the USER_INFO table
+                    ssms.InsertNewUserInfo(userID, model.FirstName, model.LastName, model.StreetAddress, model.City,
+                                           model.State, model.ZipCode, model.EmailAddress, model.CellNumber.Replace("-", ""), model.CellCarrierID.ToString(),
+                                           Convert.ToBoolean(model.ReceiveText), Convert.ToBoolean(model.ReceiveEmail));
+                }
 
                 return RedirectToAction("Index", "Home");
             }

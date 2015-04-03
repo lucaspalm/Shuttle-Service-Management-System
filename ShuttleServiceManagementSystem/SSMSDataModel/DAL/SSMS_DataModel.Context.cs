@@ -25,19 +25,18 @@ namespace SSMSDataModel.DAL
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<CELL_CARRIERS> CELL_CARRIERS { get; set; }
+        public virtual DbSet<DESTINATION> DESTINATIONS { get; set; }
+        public virtual DbSet<DRIVERS_AVAILABILITY> DRIVERS_AVAILABILITY { get; set; }
+        public virtual DbSet<ORDER> ORDERS { get; set; }
+        public virtual DbSet<SYSTEM_LOGS> SYSTEM_LOGS { get; set; }
         public virtual DbSet<SYSTEM_ROLES> SYSTEM_ROLES { get; set; }
-        public virtual DbSet<SYSTEM_VARIABLES> SYSTEM_VARIABLES { get; set; }
+        public virtual DbSet<TRIP> TRIPS { get; set; }
         public virtual DbSet<USER_ACCOUNTS> USER_ACCOUNTS { get; set; }
         public virtual DbSet<USER_CLAIMS> USER_CLAIMS { get; set; }
+        public virtual DbSet<USER_INFO> USER_INFO { get; set; }
         public virtual DbSet<USER_LOGINS> USER_LOGINS { get; set; }
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
-        public virtual DbSet<SYSTEM_LOGS> SYSTEM_LOGS { get; set; }
-        public virtual DbSet<TRIP> TRIPS { get; set; }
-        public virtual DbSet<DESTINATION> DESTINATIONS { get; set; }
-        public virtual DbSet<ORDER> ORDERS { get; set; }
-        public virtual DbSet<USER_INFO> USER_INFO { get; set; }
-        public virtual DbSet<CELL_CARRIERS> CELL_CARRIERS { get; set; }
-        public virtual DbSet<DRIVERS_AVAILABILITY> DRIVERS_AVAILABILITY { get; set; }
     }
 }

@@ -43,7 +43,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             else
             {
                 //TempData["alert"] = "You must first add your profile information before you can create an order.";
-                return RedirectToAction("AddProfileInfo", "Account");
+                return RedirectToAction("ManageProfileInfo", "Account");
             }           
         }
 

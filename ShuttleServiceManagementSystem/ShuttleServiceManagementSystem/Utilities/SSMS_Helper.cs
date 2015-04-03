@@ -128,14 +128,14 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// <param name="cellNumber"></param>
         /// <param name="receiveText"></param>
         /// <param name="receiveEmail"></param>
-        public void UpdateUserInfo(string userID, string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string emailAddress, string cellNumber, string receiveText, string receiveEmail)
+        public void UpdateUserInfo(string userID, string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string emailAddress, string cellNumber, string cellCarrierID, bool receiveText, bool receiveEmail)
         {
             // Variable Declarations
             string query = "";
             List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Create the query
-            query = "UPDATE [SDSU_School].[4Moxie].[USER_INFO] SET USER_ID = @userid, FIRST_NAME = @firstname, LAST_NAME = @lastname, STREET_ADDRESS = @streetaddress, CITY = @city, STATE = @state, ZIP_CODE = @zipcode, EMAIL_ADDRESS = @emailaddress, CELL_NUMBER = @cellnumber, RECEIVE_TEXT = @receivetext, RECEIVE_TEXT = @receiveemail";
+            query = "UPDATE [SDSU_School].[4Moxie].[USER_INFO] SET FIRST_NAME = @firstname, LAST_NAME = @lastname, STREET_ADDRESS = @streetaddress, CITY = @city, STATE = @state, ZIP_CODE = @zipcode, EMAIL_ADDRESS = @emailaddress, CELL_NUMBER = @cellnumber, CELL_CARRIER_ID = @cellcarrierid, RECEIVE_TEXT = @receivetext, RECEIVE_EMAIL = @receiveemail WHERE USER_ID = @userid";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@userid", userID));
@@ -146,6 +146,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             paramList.Add(new SqlParameter("@state", state));
             paramList.Add(new SqlParameter("@zipcode", zipCode));
             paramList.Add(new SqlParameter("@emailaddress", emailAddress));
+            paramList.Add(new SqlParameter("@cellcarrierid", cellCarrierID));
             paramList.Add(new SqlParameter("@cellnumber", cellNumber));
             paramList.Add(new SqlParameter("@receivetext", receiveText));
             paramList.Add(new SqlParameter("@receiveemail", receiveEmail));
@@ -174,6 +175,30 @@ namespace ShuttleServiceManagementSystem.Utilities
 
             // Execute the query
             db.Database.ExecuteSqlCommand(query, parameters);
+        }
+
+        /// <summary>
+        /// This method will get the speciied users profile information
+        /// </summary>
+        /// <param name="userID"></param>
+        public USER_INFO GetUserProfileInfo(string userID)
+        {
+            // Variable Declarations
+            string query = "";
+            USER_INFO info = new USER_INFO();
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[USER_INFO] WHERE USER_ID = @userid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userID));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            info = db.USER_INFO.SqlQuery(query, parameters).FirstOrDefault<USER_INFO>();
+
+            return info;
         }
 
         /// <summary>
@@ -314,35 +339,104 @@ namespace ShuttleServiceManagementSystem.Utilities
             return Convert.ToInt32(queryResult) + 1;
         }
 
-        public int GetNextAvailableID()
+        /// <summary>
+        /// This method will insert a new work availability date/time into the database for a specified driver.
+        /// </summary>
+        /// <param name="availabilityID"></param>
+        /// <param name="driverUserID"></param>
+        /// <param name="date"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        public void InsertNewAvailability(string availabilityID, string driverUserID, string date, string startTime, string endTime)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "INSERT INTO [SDSU_School].[4Moxie].[DRIVERS_AVAILABILITY] VALUES (@availabilityid, @driveruserid, @date, @starttime, @endtime)";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@availabilityid", availabilityID));
+            paramList.Add(new SqlParameter("@driveruserid", driverUserID));
+            paramList.Add(new SqlParameter("@date", date));
+            paramList.Add(new SqlParameter("@starttime", startTime));
+            paramList.Add(new SqlParameter("@endtime", endTime));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
+        }
+
+        /// <summary>
+        /// This method will get the next available ID number that can be used for a new driver availability.
+        /// </summary>
+        /// <returns></returns>
+        public int GetNextAvailabilityID()
         {
             // Variable Declarations
             string query = "";
             int queryResult = 0;
 
             // Create the query
-            query = "SELECT ISNULL(MAX(ORDER_NUMBER), 0) FROM [SDSU_School].[4Moxie].[ORDERS]";
+            query = "SELECT ISNULL(MAX(ID), 0) FROM [SDSU_School].[4Moxie].[DRIVERS_AVAILABILITY]";
 
             // Execute the query
             queryResult = db.Database.SqlQuery<int>(query).FirstOrDefault<int>();
 
-            // Return the next order number
+            // Return the next ID number
             return Convert.ToInt32(queryResult) + 1;
         }
 
-        public List<string> GetDriverTimesheetInfo(string driverID)
+        /// <summary>
+        /// This method will get all of the timesheet events for the specified driver.
+        /// </summary>
+        /// <param name="driverUserID"></param>
+        /// <returns></returns>
+        public List<DRIVERS_AVAILABILITY> GetDriverTimesheet(string driverUserID)
         {
             // Variable Declarations
-            List<string> timesheetEvents = new List<string>();
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
 
+            // Create the query
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[DRIVERS_AVAILABILITY] WHERE DRIVER_USER_ID = @driveruserid";
 
-            return timesheetEvents;
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@driveruserid", driverUserID));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            var orderList = db.DRIVERS_AVAILABILITY.SqlQuery(query, parameters).ToList<DRIVERS_AVAILABILITY>();
+
+            // Return the list of orders
+            return orderList;
+        }
+
+        /// <summary>
+        /// This method will return a list of all the trips.
+        /// </summary>
+        /// <returns></returns>
+        public List<TRIP> GetAllTrips()
+        {
+            // Variable Declarations
+            string query = "";
+
+            // Create the query
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[TRIPS]";
+
+            // Execute the query
+            var tripList = db.TRIPS.SqlQuery(query).ToList<TRIP>();
+
+            // Return the list of orders
+            return tripList;
         }
 
         public void CreateNewTrip(string tripNumber, string driverUserID, string orderNumber)
         {
             // Variable Declarations
             string query = "";
+
 
         }
 
@@ -409,11 +503,6 @@ namespace ShuttleServiceManagementSystem.Utilities
 
             // Return the list of orders
             return orderList;
-        }
-
-        public void GetUserInfo(string userid)
-        {
-            // Variable Declarations
         }
 
         public List<string> GetDestinationList()

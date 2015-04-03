@@ -26,8 +26,5 @@ namespace SSMSDataModel.DAL
         public Nullable<int> NUMBER_OF_PASSENGERS { get; set; }
         public string FLIGHT_DETAILS { get; set; }
         public string COMMENTS { get; set; }
-    
-        public virtual DESTINATION DESTINATION { get; set; }
-        public virtual USER_ACCOUNTS USER_ACCOUNTS { get; set; }
     }
 }

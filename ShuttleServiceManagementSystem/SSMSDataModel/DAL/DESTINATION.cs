@@ -14,18 +14,11 @@ namespace SSMSDataModel.DAL
     
     public partial class DESTINATION
     {
-        public DESTINATION()
-        {
-            this.ORDERS = new HashSet<ORDER>();
-        }
-    
         public int DESTINATION_ID { get; set; }
         public string DESTINATION_NAME { get; set; }
         public string DESTINATION_ADDRESS { get; set; }
         public string DESTINATION_CITY { get; set; }
         public string DESTINATION_STATE { get; set; }
         public string DESTINATION_ZIPCODE { get; set; }
-    
-        public virtual ICollection<ORDER> ORDERS { get; set; }
     }
 }

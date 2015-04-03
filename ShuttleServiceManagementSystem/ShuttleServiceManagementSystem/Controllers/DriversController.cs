@@ -38,29 +38,56 @@ namespace ShuttleServiceManagementSystem.Controllers
         }
 
         // GET: /Drivers/GetDriverTimesheet
-        public void GetDriverTimesheet(double start, double end)
+        public JsonResult GetDriverTimesheet(double? start, double? end)
         {
             // Variable Declarations
-            //var timesheetEvents = ssms.GetDriverTimesheet(User.Identity.GetUserId());
+            string driverUserID = "";
 
+            // Get the current user's ID
+            driverUserID = User.Identity.GetUserId();
 
+            // Get the list of timesheet events for the current user/driver
+            var timesheetEvents = ssms.GetDriverTimesheet(driverUserID);
 
+            // Convert the event list into a format that can be correctly read by the calendar plugin
+            var eventListToSend = from e in timesheetEvents
+                                  select new
+                                  {
+                                      id = e.ID,
+                                      title = "",
+                                      start = e.DATE.Add(e.START_TIME).ToString("s"),
+                                      end = e.DATE.Add(e.END_TIME).ToString("s"),
+                                      color = "#008CBA"
+                                  };
+            var rows = eventListToSend.ToArray();
 
-            //var rows = timesheetEvents.ToArray();
-
-            //return Json(rows, JsonRequestBehavior.AllowGet);
+            // Return the JSON list data to the calendar
+            return Json(rows, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /Drivers/SaveNewAvailability
+        // POST: /Drivers/SaveNewAvailability
         [HttpPost]
         public bool SaveNewAvailability(string NewAvailabilityDate, string NewAvailabilityStartTime, string NewAvailabilityEndTime)
         {
             // Variable Declarations
-            string a = NewAvailabilityDate;
-            string b = NewAvailabilityStartTime;
-            string c = NewAvailabilityEndTime;
+            string availabilityID = "";
+            string driverUserID = "";
 
-            string answer = a + b + c;
+            try
+            {
+                // Get the next available ID to be used for the new driver availability
+                availabilityID = ssms.GetNextAvailabilityID().ToString();
+
+                // Get the current user's ID
+                driverUserID = User.Identity.GetUserId();
+
+                // Insert the new driver availability into the database
+                ssms.InsertNewAvailability(availabilityID, driverUserID, NewAvailabilityDate, NewAvailabilityStartTime, NewAvailabilityEndTime);
+            }
+            catch
+            {
+                return false;
+            }
 
             return true;
         }

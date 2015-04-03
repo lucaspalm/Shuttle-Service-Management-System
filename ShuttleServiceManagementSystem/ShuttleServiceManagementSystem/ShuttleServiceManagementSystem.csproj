@@ -267,14 +267,14 @@
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Manage.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Managers\Home.cshtml" />
     <Content Include="Views\Drivers\Home.cshtml" />
     <Content Include="Views\Customers\Home.cshtml" />
     <Content Include="Views\Customers\CreateOrder.cshtml" />
-    <Content Include="Views\Account\AddProfileInfo.cshtml" />
+    <Content Include="Views\Account\ManageProfileInfo.cshtml" />
     <Content Include="Views\Customers\ViewOrders.cshtml" />
     <Content Include="Views\Customers\DeleteOrder.cshtml" />
     <Content Include="Views\Customers\OrderDetails.cshtml" />
@@ -282,6 +282,7 @@
     <Content Include="Views\Customers\OrderSuccess.cshtml" />
     <Content Include="Views\Drivers\ManageTimesheet.cshtml" />
     <Content Include="Views\Drivers\ViewSchedule.cshtml" />
+    <Content Include="Views\Managers\ScheduleTrips.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -16,30 +16,11 @@
             allDaySlot: false,
             selectable: true,
             eventSources: [{
-                url: '@Url.Action("GetDriverTimesheet", "Drivers")',
+                url: '@Url.Action("GetTrips", "Managers")',
                 type: 'GET'
-            }],
-            select: function (start, end, allDay) {
-                if ((moment(start).format('MM/DD/YYYY')) == (moment(end).format('MM/DD/YYYY'))) {
-                    $('#date').val(moment(start).format('MM/DD/YYYY'));
-                    $('#startTime').val(moment(start).format('HH:mm:ss'));
-                    $('#endTime').val(moment(end).format('HH:mm:ss'));
-                    ShowModalPopup();
-                }
-                else {
-                    alert('You can only select a time slot for one day at a time!');
-                }
-            }
+            }]
         });
     });
-</script>
-
-<script type="text/javascript">
-    function ClearModalFormValues() {
-        $('#date').val("");
-        $('#startTime').val("");
-        $('#endTime').val("");
-    }
 </script>
 
 <script type="text/javascript">
@@ -50,14 +31,14 @@
 </script>
 
 <script type="text/javascript">
-    function CancelNewEvent() {
+    function CancelTripChanges() {
         ClearModalFormValues();
         $('#newEventModal').modal('hide');
     };
 </script>
 
 <script type="text/javascript">
-    function SaveNewEvent() {
+    function SaveTripChanges() {
         $('#newEventModal').modal('show');
 
         var dataRow = {
@@ -87,13 +68,13 @@
     };
 </script>
 
-<h2>Timesheet - @User.Identity.Name</h2>
+<h2>Trip Scheduler</h2>
 <hr />
 <div id="calendar"></div>
 <div id="newEventModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h3>Add New Availability</h3></div>
+            <div class="modal-header"><h3>Assign Driver to trip</h3></div>
             <div class="modal-body">
                 <form id="EventForm" class="well">
                     <label>Date</label><br />
@@ -105,8 +86,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnPopupCancel" class="btn" onclick="CancelNewEvent()">Cancel</button>
-                <button type="button" id="btnPopupSave" class="btn btn-primary" onclick="SaveNewEvent()">Save</button>
+                <button type="button" id="btnPopupCancel" class="btn" onclick="CancelTripChanges()">Cancel</button>
+                <button type="button" id="btnPopupSave" class="btn btn-primary" onclick="SaveTripChanges()">Save</button>
             </div>
         </div>
     </div>

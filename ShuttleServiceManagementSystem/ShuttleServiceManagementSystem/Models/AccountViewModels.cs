@@ -92,12 +92,12 @@ namespace ShuttleServiceManagementSystem.Models
 
         [Required]
         [Display(Name = "Cell Carrier")]
-        public string CellCarrierID { get; set; }
+        public int? CellCarrierID { get; set; }
 
         [Display(Name = "Receive Text Alerts?")]
-        public bool ReceiveText { get; set; }
+        public bool? ReceiveText { get; set; }
 
         [Display(Name = "Receive Email Alerts?")]
-        public bool ReceiveEmail { get; set; }
+        public bool? ReceiveEmail { get; set; }
     }
 }

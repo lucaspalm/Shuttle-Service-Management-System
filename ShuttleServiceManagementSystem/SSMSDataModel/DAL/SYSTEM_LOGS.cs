@@ -16,7 +16,5 @@ namespace SSMSDataModel.DAL
     {
         public string USER_ID { get; set; }
         public System.DateTime LOGIN_DATETIME { get; set; }
-    
-        public virtual USER_ACCOUNTS USER_ACCOUNTS { get; set; }
     }
 }
