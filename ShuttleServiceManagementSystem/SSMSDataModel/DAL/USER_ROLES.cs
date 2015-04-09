@@ -12,12 +12,11 @@ namespace SSMSDataModel.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class DRIVERS_AVAILABILITY
+    public partial class USER_ROLES
     {
-        public int ID { get; set; }
-        public string DRIVER_USER_ID { get; set; }
-        public System.DateTime DATE { get; set; }
-        public System.TimeSpan START_TIME { get; set; }
-        public System.TimeSpan END_TIME { get; set; }
+        public string UserId { get; set; }
+        public string RoleId { get; set; }
+    
+        public virtual SYSTEM_ROLES SYSTEM_ROLES { get; set; }
     }
 }

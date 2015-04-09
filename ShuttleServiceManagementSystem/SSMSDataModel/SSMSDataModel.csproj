@@ -58,7 +58,10 @@
     <Compile Include="DAL\DESTINATION.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="DAL\DRIVERS_AVAILABILITY.cs">
+    <Compile Include="DAL\DRIVER_TIME_AVAILABILITIES.cs">
+      <DependentUpon>SSMS_DataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\DRIVER_TRIP_ASSIGNMENTS.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DAL\ORDER.cs">
@@ -88,9 +91,6 @@
     <Compile Include="DAL\SYSTEM_ROLES.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="DAL\TRIP.cs">
-      <DependentUpon>SSMS_DataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="DAL\USER_ACCOUNTS.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>
@@ -101,6 +101,9 @@
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DAL\USER_LOGINS.cs">
+      <DependentUpon>SSMS_DataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\USER_ROLES.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

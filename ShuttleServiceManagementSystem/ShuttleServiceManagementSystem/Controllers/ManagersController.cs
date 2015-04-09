@@ -40,23 +40,23 @@ namespace ShuttleServiceManagementSystem.Controllers
             var tripList = ssms.GetAllTrips();
 
             // Convert the event list into a format that can be correctly read by the calendar plugin
-            foreach (TRIP trip in tripList)
+            foreach (DRIVER_TRIP_ASSIGNMENTS assign in tripList)
             {
 
             }
 
-            var eventListToSend = from e in tripList
-                                  select new
-                                  {
-                                      id = e.ID,
-                                      title = "",
-                                      start = e.DATE.Add(e.START_TIME).ToString("s"),
-                                      color = "#008CBA"
-                                  };
-            var rows = eventListToSend.ToArray();
+            //var eventListToSend = from e in tripList
+            //                      select new
+            //                      {
+            //                          id = e.ID,
+            //                          title = "",
+            //                          start = e.DATE.Add(e.START_TIME).ToString("s"),
+            //                          color = "#008CBA"
+            //                      };
+            //var rows = eventListToSend.ToArray();
 
             // Return the JSON list data to the calendar
-            return Json(rows, JsonRequestBehavior.AllowGet);
+            return null;// Json(rows, JsonRequestBehavior.AllowGet);
         }
 	}
 }

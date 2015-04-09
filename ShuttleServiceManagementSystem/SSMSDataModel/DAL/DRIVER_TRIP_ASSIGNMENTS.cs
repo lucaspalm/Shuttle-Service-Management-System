@@ -12,10 +12,9 @@ namespace SSMSDataModel.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class TRIP
+    public partial class DRIVER_TRIP_ASSIGNMENTS
     {
-        public int TRIP_NUMBER { get; set; }
-        public string DRIVER_USER_ID { get; set; }
         public int ORDER_NUMBER { get; set; }
+        public string DRIVER_USER_ID { get; set; }
     }
 }

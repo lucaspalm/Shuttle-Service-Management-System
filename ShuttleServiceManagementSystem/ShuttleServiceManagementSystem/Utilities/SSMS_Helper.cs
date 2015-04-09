@@ -354,7 +354,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Create the query
-            query = "INSERT INTO [SDSU_School].[4Moxie].[DRIVERS_AVAILABILITY] VALUES (@availabilityid, @driveruserid, @date, @starttime, @endtime)";
+            query = "INSERT INTO [SDSU_School].[4Moxie].[DRIVER_TIME_AVAILABILITIES] VALUES (@availabilityid, @driveruserid, @date, @starttime, @endtime)";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@availabilityid", availabilityID));
@@ -379,7 +379,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             int queryResult = 0;
 
             // Create the query
-            query = "SELECT ISNULL(MAX(ID), 0) FROM [SDSU_School].[4Moxie].[DRIVERS_AVAILABILITY]";
+            query = "SELECT ISNULL(MAX(ID), 0) FROM [SDSU_School].[4Moxie].[DRIVER_TIME_AVAILABILITIES]";
 
             // Execute the query
             queryResult = db.Database.SqlQuery<int>(query).FirstOrDefault<int>();
@@ -393,21 +393,21 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// </summary>
         /// <param name="driverUserID"></param>
         /// <returns></returns>
-        public List<DRIVERS_AVAILABILITY> GetDriverTimesheet(string driverUserID)
+        public List<DRIVER_TIME_AVAILABILITIES> GetDriverTimesheet(string driverUserID)
         {
             // Variable Declarations
             string query = "";
             List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Create the query
-            query = "SELECT * FROM [SDSU_School].[4Moxie].[DRIVERS_AVAILABILITY] WHERE DRIVER_USER_ID = @driveruserid";
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[DRIVER_TIME_AVAILABILITIES] WHERE DRIVER_USER_ID = @driveruserid";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@driveruserid", driverUserID));
             SqlParameter[] parameters = paramList.ToArray();
 
             // Execute the query
-            var orderList = db.DRIVERS_AVAILABILITY.SqlQuery(query, parameters).ToList<DRIVERS_AVAILABILITY>();
+            var orderList = db.DRIVER_TIME_AVAILABILITIES.SqlQuery(query, parameters).ToList<DRIVER_TIME_AVAILABILITIES>();
 
             // Return the list of orders
             return orderList;
@@ -417,7 +417,7 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// This method will return a list of all the trips.
         /// </summary>
         /// <returns></returns>
-        public List<TRIP> GetAllTrips()
+        public List<DRIVER_TRIP_ASSIGNMENTS> GetAllTrips()
         {
             // Variable Declarations
             string query = "";
@@ -426,7 +426,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             query = "SELECT * FROM [SDSU_School].[4Moxie].[TRIPS]";
 
             // Execute the query
-            var tripList = db.TRIPS.SqlQuery(query).ToList<TRIP>();
+            var tripList = db.DRIVER_TRIP_ASSIGNMENTS.SqlQuery(query).ToList<DRIVER_TRIP_ASSIGNMENTS>();
 
             // Return the list of orders
             return tripList;

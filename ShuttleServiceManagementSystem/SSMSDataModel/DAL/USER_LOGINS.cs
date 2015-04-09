@@ -17,7 +17,5 @@ namespace SSMSDataModel.DAL
         public string UserId { get; set; }
         public string LoginProvider { get; set; }
         public string ProviderKey { get; set; }
-    
-        public virtual USER_ACCOUNTS USER_ACCOUNTS { get; set; }
     }
 }

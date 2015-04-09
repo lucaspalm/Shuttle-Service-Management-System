@@ -16,12 +16,12 @@ namespace SSMSDataModel.DAL
     {
         public SYSTEM_ROLES()
         {
-            this.USER_ACCOUNTS = new HashSet<USER_ACCOUNTS>();
+            this.USER_ROLES = new HashSet<USER_ROLES>();
         }
     
         public string Id { get; set; }
         public string Name { get; set; }
     
-        public virtual ICollection<USER_ACCOUNTS> USER_ACCOUNTS { get; set; }
+        public virtual ICollection<USER_ROLES> USER_ROLES { get; set; }
     }
 }

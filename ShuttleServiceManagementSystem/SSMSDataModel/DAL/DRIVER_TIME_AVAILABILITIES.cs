@@ -12,11 +12,12 @@ namespace SSMSDataModel.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class USER_CLAIMS
+    public partial class DRIVER_TIME_AVAILABILITIES
     {
-        public int Id { get; set; }
-        public string ClaimType { get; set; }
-        public string ClaimValue { get; set; }
-        public string User_Id { get; set; }
+        public int ID { get; set; }
+        public string DRIVER_USER_ID { get; set; }
+        public System.DateTime DATE { get; set; }
+        public System.TimeSpan START_TIME { get; set; }
+        public System.TimeSpan END_TIME { get; set; }
     }
 }
