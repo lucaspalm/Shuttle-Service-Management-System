@@ -14,6 +14,36 @@ namespace ShuttleServiceManagementSystem.Utilities
 {
     public enum Roles { CUSTOMER = 1, DRIVER = 2, MANAGER = 3, ADMINISTRATOR = 4 };
 
+    public class CalendarEventObject
+    {
+        public int id { get; set; }
+        public string title { get; set; }
+        public string start { get; set; }
+        public string end { get; set; }
+        public string color { get; set; }
+    }
+
+    public class DriverDDLObject
+    {
+        public string value { get; set; }
+        public string text { get; set; }
+    }
+
+    public class OrderInfo
+    {
+        public string customerName { get; set; }
+        public string dateOrderPlaced { get; set; }
+        public string departureDate { get; set; }
+        public string departureAddress { get; set; }
+        public string departureCity { get; set; }
+        public string departureState { get; set; }
+        public string departureZipCode { get; set; }
+        public string destination { get; set; }
+        public string numPassengers { get; set; }
+        public string flightDetails { get; set; }
+        public string comments { get; set; }
+    }
+
     public class SSMS_Helper
     {
         private SDSU_SchoolEntities db = new SDSU_SchoolEntities();
@@ -48,7 +78,7 @@ namespace ShuttleServiceManagementSystem.Utilities
         }
 
         /// <summary>
-        /// This method will get the USER_ID for the passed in username
+        /// This method will get the USER_ID for the passed in username.
         /// </summary>
         /// <param name="username"></param>
         /// <returns>string</returns>
@@ -70,6 +100,31 @@ namespace ShuttleServiceManagementSystem.Utilities
             userID = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
 
             return userID;
+        }
+
+        /// <summary>
+        /// This method will get the username for the specified user ID.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public string GetUserName(string userID)
+        {
+            // Variable Declarations
+            string query = "";
+            string userName = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT UserName FROM [SDSU_School].[4Moxie].[USER_ACCOUNTS] WHERE USER_ID = @userid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userID));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            userName = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
+
+            return userName;
         }
 
         /// <summary>
@@ -128,7 +183,7 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// <param name="cellNumber"></param>
         /// <param name="receiveText"></param>
         /// <param name="receiveEmail"></param>
-        public void UpdateUserInfo(string userID, string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string emailAddress, string cellNumber, string cellCarrierID, bool receiveText, bool receiveEmail)
+        public void UpdateExistingUserInfo(string userID, string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string emailAddress, string cellNumber, string cellCarrierID, bool receiveText, bool receiveEmail)
         {
             // Variable Declarations
             string query = "";
@@ -291,7 +346,7 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// <param name="numberOfPassengers"></param>
         /// <param name="flightDetails"></param>
         /// <param name="comments"></param>
-        public void UpdateOrderInfo(string orderNumber, string departureDate, string departureStreetAddress, string departureCity, string departureState, string departureZipCode, string destinationID, string numberOfPassengers, string flightDetails, string comments)
+        public void UpdateExistingOrderInfo(string orderNumber, string departureDate, string departureStreetAddress, string departureCity, string departureState, string departureZipCode, string destinationID, string numberOfPassengers, string flightDetails, string comments)
         {
             // Variable Declarations
             string query = "";
@@ -393,17 +448,19 @@ namespace ShuttleServiceManagementSystem.Utilities
         /// </summary>
         /// <param name="driverUserID"></param>
         /// <returns></returns>
-        public List<DRIVER_TIME_AVAILABILITIES> GetDriverTimesheet(string driverUserID)
+        public List<DRIVER_TIME_AVAILABILITIES> GetDriverTimesheet(string driverUserID, string startDate, string endDate)
         {
             // Variable Declarations
             string query = "";
             List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Create the query
-            query = "SELECT * FROM [SDSU_School].[4Moxie].[DRIVER_TIME_AVAILABILITIES] WHERE DRIVER_USER_ID = @driveruserid";
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[DRIVER_TIME_AVAILABILITIES] WHERE DRIVER_USER_ID = @driveruserid AND DATE > @startDate AND DATE < @endDate";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@driveruserid", driverUserID));
+            paramList.Add(new SqlParameter("@startDate", startDate));
+            paramList.Add(new SqlParameter("@endDate", endDate));
             SqlParameter[] parameters = paramList.ToArray();
 
             // Execute the query
@@ -414,35 +471,28 @@ namespace ShuttleServiceManagementSystem.Utilities
         }
 
         /// <summary>
-        /// This method will return a list of all the trips.
+        /// This method will return a list of all the trip orders.
         /// </summary>
         /// <returns></returns>
-        public List<DRIVER_TRIP_ASSIGNMENTS> GetAllTrips()
+        public List<ORDER> GetAllTripOrders(string startDate, string endDate)
         {
             // Variable Declarations
             string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Create the query
-            query = "SELECT * FROM [SDSU_School].[4Moxie].[TRIPS]";
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[ORDERS] WHERE DEPARTURE_DATETIME > @startDate AND DEPARTURE_DATETIME < @endDate";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@startDate", startDate));
+            paramList.Add(new SqlParameter("@endDate", endDate));
+            SqlParameter[] parameters = paramList.ToArray();
 
             // Execute the query
-            var tripList = db.DRIVER_TRIP_ASSIGNMENTS.SqlQuery(query).ToList<DRIVER_TRIP_ASSIGNMENTS>();
+            var orderList = db.ORDERS.SqlQuery(query, parameters).ToList<ORDER>();
 
             // Return the list of orders
-            return tripList;
-        }
-
-        public void CreateNewTrip(string tripNumber, string driverUserID, string orderNumber)
-        {
-            // Variable Declarations
-            string query = "";
-
-
-        }
-
-        public void AddOrderToExistingTrip(string orderNumber)
-        {
-
+            return orderList;
         }
 
         /// <summary>
@@ -505,6 +555,10 @@ namespace ShuttleServiceManagementSystem.Utilities
             return orderList;
         }
 
+        /// <summary>
+        /// This method will get all the supported trip destinations.
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetDestinationList()
         {
             // Variable Declarations
@@ -520,57 +574,11 @@ namespace ShuttleServiceManagementSystem.Utilities
             return destinationList;
         }
 
-        public string GetUserCellNumber(string userid)
-        {
-            // Variable Declarations
-            string cellNumber = "";
-
-            return cellNumber;
-        }
-
-        public string GetUserEmailAddress(string userid)
-        {
-            // Variable Declarations
-            string query = "";
-            string emailAddress = "";
-
-            // Create the query
-            query = "SELECT EMAIL_ADDRESS FROM [SDSU_School].[4Moxie].[USER_INFO]";
-
-            // Execute the query
-            emailAddress = db.Database.SqlQuery<string>(query).FirstOrDefault<string>();
-
-            return emailAddress;
-        }
-
-        public void InsertNewSystemRole()
-        {
-
-        }
-
-        public void InsertNewUserRole(string userid, int roleid)
-        {
-            // Variable Declarations
-            string query = "";
-            List<SqlParameter> paramList = new List<SqlParameter>();
-
-            // Create the query
-            query = "INSERT INTO [SDSU_School].[4Moxie].[USER_ROLES] VALUES (@userid, @roleid)";
-
-            // Populate the list of parameters
-            paramList.Add(new SqlParameter("@userid", userid));
-            paramList.Add(new SqlParameter("@roleid", roleid));
-            SqlParameter[] parameters = paramList.ToArray();
-
-            // Execute the query
-            db.Database.ExecuteSqlCommand(query, parameters);
-        }
-
-        public void UpdateUserRole(string userid, string roleid)
-        {
-
-        }
-
+        /// <summary>
+        /// This method returns the name corresponding to the specified destination ID.
+        /// </summary>
+        /// <param name="destinationid"></param>
+        /// <returns></returns>
         public string GetDestinationName(string destinationid)
         {
             // Variable Declarations
@@ -589,6 +597,108 @@ namespace ShuttleServiceManagementSystem.Utilities
             destinationName = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
 
             return destinationName;
+        }
+
+        /// <summary>
+        /// This method will get all the available drivers for the specified order.
+        /// </summary>
+        /// <param name="orderNumber"></param>
+        /// <returns></returns>
+        public List<string> GetAllAvailableDriversForOrder(string orderNumber)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT DRIVER_USER_ID FROM [SDSU_School].[4Moxie].[DRIVER_TIME_AVAILABILITIES] avails, [SDSU_School].[4Moxie].[ORDERS] orders WHERE orders.DEPARTURE_DATETIME BETWEEN CONVERT(DATETIME, CONVERT(CHAR(8), avails.DATE, 112) + ' ' + CONVERT(CHAR(8), avails.START_TIME, 108)) AND CONVERT(DATETIME, CONVERT(CHAR(8), avails.DATE, 112) + ' ' + CONVERT(CHAR(8), avails.END_TIME, 108)) AND orders.ORDER_NUMBER = @ordernumber"; 
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@ordernumber", orderNumber));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            var destinationList = db.Database.SqlQuery<string>(query, parameters).ToList();
+
+            return destinationList;
+        }
+
+        /// <summary>
+        /// This method will get the user ID of the driver that has been assigned to the specified order.
+        /// </summary>
+        /// <param name="orderNumber"></param>
+        /// <returns></returns>
+        public string GetAssignedDriverForOrder(string orderNumber)
+        {
+            // Variable Declarations
+            string driverUserID = "";
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT DRIVER_USER_ID FROM [SDSU_School].[4Moxie].[DRIVER_TRIP_ASSIGNMENTS] WHERE ORDER_NUMBER = @ordernumber";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@orderNumber", orderNumber));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            driverUserID = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
+
+            return driverUserID;
+        }
+
+        /// <summary>
+        /// This method will get the first and last name for the user who placed the specified order.
+        /// </summary>
+        /// <param name="orderNumber"></param>
+        /// <returns></returns>
+        public string GetUserFirstandLastNameFromOrder(string orderNumber)
+        {
+            // Variable Declarations
+            string name = "";
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT (user_info.FIRST_NAME + ' ' + user_info.LAST_NAME) FROM [SDSU_School].[4Moxie].[USER_INFO] user_info, [SDSU_School].[4Moxie].[ORDERS] orders WHERE user_info.USER_ID = orders.USER_ID AND orders.ORDER_NUMBER = @ordernumber";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@orderNumber", orderNumber));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            name = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
+
+            return name;
+        }
+
+        /// <summary>
+        /// This method will insert a new record, including the user ID and role ID, into the USER_ROLES table.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="roleid"></param>
+        public void InsertNewUserRole(string userid, int roleid)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "INSERT INTO [SDSU_School].[4Moxie].[USER_ROLES] VALUES (@userid, @roleid)";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userid));
+            paramList.Add(new SqlParameter("@roleid", roleid));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
+        }
+
+        public void UpdateExistingUserRole()
+        {
+
         }
 
         /// <summary>
@@ -664,5 +774,80 @@ namespace ShuttleServiceManagementSystem.Utilities
 
             return hashValue.ToString();
         }
+
+        /// <summary>
+        /// This method will insert a new trip assignment into the DRIVER_TRIP_ASSIGNMENTS table.
+        /// </summary>
+        /// <param name="orderNumber"></param>
+        /// <param name="driverUserID"></param>
+        public void InsertNewDriverAssignment(string orderNumber, string driverUserID)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "INSERT INTO [SDSU_School].[4Moxie].[DRIVER_TRIP_ASSIGNMENTS] VALUES (@ordernumber, @driveruserid)";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@ordernumber", orderNumber));
+            paramList.Add(new SqlParameter("@driveruserid", driverUserID));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
+        }
+
+        /// <summary>
+        /// This method will update an existing row in the DRIVER_TRIP_ASSIGNMENTS table.
+        /// </summary>
+        /// <param name="orderNumber"></param>
+        /// <param name="newDriverUserID"></param>
+        public void UpdateExistingDriverAssignment(string orderNumber, string newDriverUserID)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "UPDATE [SDSU_School].[4Moxie].[DRIVER_TRIP_ASSIGNMENTS] SET DRIVER_USER_ID = @driveruserid WHERE ORDER_NUMBER = @ordernumber";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@ordernumber", orderNumber));
+            paramList.Add(new SqlParameter("@driveruserid", newDriverUserID));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
+        }
+
+        public string GetUserCellNumber(string userid)
+        {
+            // Variable Declarations
+            string cellNumber = "";
+
+            return cellNumber;
+        }
+
+        public string GetUserEmailAddress(string userid)
+        {
+            // Variable Declarations
+            string query = "";
+            string emailAddress = "";
+
+            // Create the query
+            query = "SELECT EMAIL_ADDRESS FROM [SDSU_School].[4Moxie].[USER_INFO]";
+
+            // Execute the query
+            emailAddress = db.Database.SqlQuery<string>(query).FirstOrDefault<string>();
+
+            return emailAddress;
+        }
+
+        public void UpdateUserRole(string userid, string roleid)
+        {
+
+        }
+
     }
 }

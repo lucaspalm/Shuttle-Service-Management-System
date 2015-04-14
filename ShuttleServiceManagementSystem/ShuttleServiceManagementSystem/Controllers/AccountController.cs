@@ -239,7 +239,7 @@ namespace ShuttleServiceManagementSystem.Controllers
                     // This is an edit operation
 
                     // Update the user's profile info
-                    ssms.UpdateUserInfo(userID, model.FirstName, model.LastName, model.StreetAddress, model.City,
+                    ssms.UpdateExistingUserInfo(userID, model.FirstName, model.LastName, model.StreetAddress, model.City,
                                            model.State, model.ZipCode, model.EmailAddress, model.CellNumber.Replace("-", ""), model.CellCarrierID.ToString(),
                                            Convert.ToBoolean(model.ReceiveText), Convert.ToBoolean(model.ReceiveEmail));
                 }

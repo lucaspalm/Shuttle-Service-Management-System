@@ -219,7 +219,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 // Update the order info
-                ssms.UpdateOrderInfo(model.OrderNumber.ToString(), model.DepartureDate.ToString(), model.DepartureAddress,
+                ssms.UpdateExistingOrderInfo(model.OrderNumber.ToString(), model.DepartureDate.ToString(), model.DepartureAddress,
                                      model.DepartureCity, model.DepartureState, model.DepartureZipCode, model.DestinationID.ToString(), 
                                      model.NumberOfPassengers.ToString(), model.FlightDetails, model.Comments);
 

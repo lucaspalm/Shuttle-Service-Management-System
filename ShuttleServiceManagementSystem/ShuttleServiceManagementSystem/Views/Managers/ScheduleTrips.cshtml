@@ -12,82 +12,157 @@
                 right: 'month,agendaWeek,agendaDay'
             },
             defaultView: 'agendaWeek',
-            editable: true,
             allDaySlot: false,
-            selectable: true,
-            eventSources: [{
-                url: '@Url.Action("GetTrips", "Managers")',
-                type: 'GET'
-            }]
+            events: '@Url.Action("GetTripOrders", "Managers")',
+            eventClick: function (calEvent, jsEvent, view) {
+                ClearModalValues();
+                $('#orderNumber').text(calEvent.id);
+                PopulateModalOrderInfo(calEvent.id);
+                PopulateModalDriverDDL(calEvent.id);
+                ShowModalPopup();
+            },
         });
     });
 </script>
 
 <script type="text/javascript">
-    function ShowModalPopup() {
-        $('#newEventModal').modal('show');
-        $('#startTime').focus();
-    };
-</script>
-
-<script type="text/javascript">
-    function CancelTripChanges() {
-        ClearModalFormValues();
-        $('#newEventModal').modal('hide');
-    };
-</script>
-
-<script type="text/javascript">
-    function SaveTripChanges() {
-        $('#newEventModal').modal('show');
-
-        var dataRow = {
-            'NewAvailabilityDate': $('#date').val(),
-            'NewAvailabilityStartTime': $('#startTime').val(),
-            'NewAvailabilityEndTime': $('#endTime').val()
-        }
-
-        ClearModalFormValues();
-
-        $.ajax({
-            type: 'POST',
-            url: "/Drivers/SaveNewAvailability",
-            data: dataRow,
-            datatype: 'json',
-            success: function (response) {
-                if (response == 'True') {
-                    $('#calendar').fullCalendar('refetchEvents');
-                    $('#newEventModal').modal('hide');
-                    //alert('New availability saved!');
-                }
-                else {
-                    alert('Error, could not save availability!');
-                }
-            }
+    function PopulateModalOrderInfo(orderNum) {
+        jQuery.getJSON('@Url.Action("GetAllOrderInfo", "Managers")', { orderNumber: orderNum }, function (result) {
+            jQuery(result).each(function (i, val) {
+                $('#customerName').text(val.customerName);
+                $('#dateOrderPlaced').text(val.dateOrderPlaced);
+                $('#departureDate').text(val.departureDate);
+                $('#departureAddress').text(val.departureAddress);
+                $('#departureCity').text(val.departureCity);
+                $('#departureState').text(val.departureState);
+                $('#departureZipCode').text(val.departureZipCode);
+                $('#destination').text(val.destination);
+                $('#numPassengers').text(val.numPassengers);
+                $('#flightDetails').text(val.flightDetails);
+                $('#comments').text(val.comments);
+            });
         });
     };
+</script>
+
+<script type="text/javascript">
+    function PopulateModalDriverDDL(orderNum) {
+        jQuery.getJSON('@Url.Action("GetAllAvailableOrderDrivers", "Managers")', { orderNumber: orderNum }, function (result) {
+            var target = jQuery('#driversDDL');
+            target.empty();
+            jQuery(result).each(function () {
+                jQuery(document.createElement('option'))
+                    .attr('Value', this.value)
+                    .text(this.text)
+                    .appendTo(target);
+            });
+        });
+    };
+</script>
+
+<script type="text/javascript">
+    function ShowModalPopup() {
+        $('#orderInfoModal').modal('show');
+    };
+</script>
+
+<script type="text/javascript">
+    function CloseModal() {
+        $('#orderInfoModal').modal('hide');
+    };
+</script>
+
+<script type="text/javascript">
+    function SaveDriverAssignment() {
+        // Ensure that a valid option was selected from the DDL
+        if ($('#driversDDL').val() == "No Available Drivers Found" || $('#driversDDL').val() == "Unassigned")
+        {
+            alert("ERROR: The selected list item is not a vaild driver assignment option.");
+        }
+        else
+        {
+            var dataRow = {
+                'OrderNumber': $('#orderNumber').text(),
+                'DriverID': $('#driversDDL').val()
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "/Managers/SaveDriverAssignment",
+                data: dataRow,
+                datatype: 'json',
+                success: function (response) {
+                    if (response == 'True') {
+                        $('#calendar').fullCalendar('refetchEvents');
+                        $('#orderInfoModal').modal('hide');
+                        alert('Driver Assignment Saved!');
+                    }
+                    else {
+                        alert('Error, could not save the assignment.');
+                    }
+                }
+            });
+        }
+    };
+</script>
+
+<script type="text/javascript">
+    function ClearModalValues() {
+        $('#ordernumber').text("");
+        $('#customerName').text("");
+        $('#dateOrderPlaced').text("");
+        $('#departureDate').text("");
+        $('#departureAddress').text("");
+        $('#departureCity').text("");
+        $('#departureState').text("");
+        $('#departureZipCode').text("");
+        $('#destination').text("");
+        $('#numPassengers').text("");
+        $('#flightDetails').text("");
+        $('#comments').text("");
+    }
 </script>
 
 <h2>Trip Scheduler</h2>
 <hr />
 <div id="calendar"></div>
-<div id="newEventModal" class="modal fade">
+<div id="orderInfoModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h3>Assign Driver to trip</h3></div>
+            <div class="modal-header"><h2>Order Information</h2></div>
             <div class="modal-body">
                 <form id="EventForm" class="well">
-                    <label>Date</label><br />
-                    <input type="text" id="date" readonly><br /><br />
-                    <label>Available Start Time</label><br />
-                    <input type="text" id="startTime" readonly><br /><br />
-                    <label>Available End Time</label><br />
-                    <input type="text" id="endTime" readonly><br />
+                    <b>Order Number:</b>
+                    <label style="font-size:14px" id="orderNumber"></label><br />
+                    <b>Customer Name:</b>
+                    <label style="font-size:14px" id="customerName"></label><br />
+                    <b>Date/Time Order Placed:</b>
+                    <label style="font-size:14px" id="dateOrderPlaced"></label><br />
+                    <b>Departure Date/Time:</b>
+                    <label style="font-size:14px" id="departureDate"></label><br />
+                    <b>Departure Address:</b>
+                    <label style="font-size:14px" id="departureAddress"></label><br />
+                    <b>Departure City:</b>
+                    <label style="font-size:14px" id="departureCity"></label><br />
+                    <b>Departure State:</b>
+                    <label style="font-size:14px" id="departureState"></label><br />
+                    <b>Departure ZipCode:</b>
+                    <label style="font-size:14px" id="departureZipCode"></label><br />
+                    <b>Destination:</b>
+                    <label style="font-size:14px" id="destination"></label><br />
+                    <b># of Passengers:</b>
+                    <label style="font-size:14px" id="numPassengers"></label><br />
+                    <b>Flight Details:</b>
+                    <label style="font-size:14px" id="flightDetails"></label><br />
+                    <b>Comments:</b>
+                    <label style="font-size:14px" id="comments"></label><br />
+                    <b>Assigned Driver:</b>
+                    @Html.DropDownList("driversDDL", new SelectList(new List<SelectListItem>(), "Value", "Text"), new { id = "driversDDL" })
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnPopupCancel" class="btn" onclick="CancelTripChanges()">Cancel</button>
-                <button type="button" id="btnPopupSave" class="btn btn-primary" onclick="SaveTripChanges()">Save</button>
+                <button type="button" id="btnPopupCancel" class="btn" onclick="CloseModal()">Close</button>
+                <button type="button" id="btnPopupSave" class="btn btn-primary" onclick="SaveDriverAssignment()">Save Driver Assignment</button>
             </div>
         </div>
     </div>

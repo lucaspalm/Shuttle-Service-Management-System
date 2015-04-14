@@ -12,13 +12,9 @@
                 right: 'month,agendaWeek,agendaDay'
             },
             defaultView: 'agendaWeek',
-            editable: true,
             allDaySlot: false,
             selectable: true,
-            eventSources: [{
-                url: '@Url.Action("GetDriverTimesheet", "Drivers")',
-                type: 'GET'
-            }],
+            events: '@Url.Action("GetDriverTimesheet", "Drivers")',
             select: function (start, end, allDay) {
                 if ((moment(start).format('MM/DD/YYYY')) == (moment(end).format('MM/DD/YYYY'))) {
                     $('#date').val(moment(start).format('MM/DD/YYYY'));
@@ -27,7 +23,7 @@
                     ShowModalPopup();
                 }
                 else {
-                    alert('You can only select a time slot for one day at a time!');
+                    alert('You can only select a time slot for one day at a time.');
                 }
             }
         });
@@ -77,10 +73,10 @@
                 if (response == 'True') {
                     $('#calendar').fullCalendar('refetchEvents');
                     $('#newEventModal').modal('hide');
-                    //alert('New availability saved!');
+                    alert('New availability saved!');
                 }
                 else {
-                    alert('Error, could not save availability!');
+                    alert('Error, could not save availability.');
                 }
             }
         });
@@ -93,7 +89,7 @@
 <div id="newEventModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h3>Add New Availability</h3></div>
+            <div class="modal-header"><h2>Add New Availability</h2></div>
             <div class="modal-body">
                 <form id="EventForm" class="well">
                     <label>Date</label><br />
