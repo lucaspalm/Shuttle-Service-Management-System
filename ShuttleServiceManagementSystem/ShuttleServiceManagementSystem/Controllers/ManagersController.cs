@@ -174,9 +174,9 @@ namespace ShuttleServiceManagementSystem.Controllers
         public JsonResult GetAllOrderInfo(string orderNumber)
         {
             // Variable Declarations
-            List<OrderInfo> orderInfo = new List<OrderInfo>();
+            List<OrderInfoObject> orderInfo = new List<OrderInfoObject>();
             ORDER order = new ORDER();
-            OrderInfo newObject = new OrderInfo();
+            OrderInfoObject newObject = new OrderInfoObject();
 
             // Query the order information
             order = db.ORDERS.Find(Convert.ToInt32(orderNumber));
@@ -230,6 +230,7 @@ namespace ShuttleServiceManagementSystem.Controllers
                     ssms.UpdateExistingDriverAssignment(OrderNumber, DriverID);
 
                     // Send alerts to the new driver, alerting them of their new assignment
+                    ssms.SendDriverAssignmentAlerts(DriverID);
                 }
                 else
                 {
@@ -237,6 +238,7 @@ namespace ShuttleServiceManagementSystem.Controllers
                     ssms.InsertNewDriverAssignment(OrderNumber, DriverID);
 
                     // Send alerts to the new driver, alerting them of their new assignment
+                    ssms.SendDriverAssignmentAlerts(DriverID);
                 }
             }
             catch

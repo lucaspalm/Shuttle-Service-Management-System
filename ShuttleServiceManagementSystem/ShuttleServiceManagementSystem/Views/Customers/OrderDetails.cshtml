@@ -94,8 +94,17 @@
 </div>
 
 <div>
-    @Html.ActionLink("Edit", "EditOrder", "Customers", new { id = Model.OrderNumber }) |
-    @Html.ActionLink("Order List", "ViewOrders", "Customers") |
+    @if (ViewBag.PastOrder == false)
+    {
+        @Html.ActionLink("Edit", "EditOrder", new { id = Model.OrderNumber }) <text> | </text>
+        @Html.ActionLink("Delete", "DeleteOrder", new { id = Model.OrderNumber }) <text> | </text>
+        @Html.ActionLink("Order List", "ViewCurrentOrders", "Customers") <text> | </text>
+    }  
+    else
+    {
+        @Html.ActionLink("Order List", "ViewPastOrders", "Customers") <text> | </text>
+    }
+    
     @Html.ActionLink("Customer Home", "Home", "Customers")
 </div>
 

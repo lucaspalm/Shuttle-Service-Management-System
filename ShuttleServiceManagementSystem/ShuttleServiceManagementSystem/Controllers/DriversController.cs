@@ -26,13 +26,13 @@ namespace ShuttleServiceManagementSystem.Controllers
             return View();
         }
 
-        // GET: /Drivers/Timesheet
+        // GET: /Drivers/ManageTimesheet
         public ActionResult ManageTimesheet()
         {
             return View();
         }
 
-        // GET: /Drivers/Timesheet
+        // GET: /Drivers/ViewSchedule
         public ActionResult ViewSchedule()
         {
             return View();

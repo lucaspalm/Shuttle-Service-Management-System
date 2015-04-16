@@ -29,7 +29,7 @@ namespace ShuttleServiceManagementSystem.Utilities
         public string text { get; set; }
     }
 
-    public class OrderInfo
+    public class OrderInfoObject
     {
         public string customerName { get; set; }
         public string dateOrderPlaced { get; set; }
@@ -511,7 +511,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             currentDate = DateTime.Now.ToString();
 
             // Create the query
-            query = "SELECT * FROM [SDSU_School].[4Moxie].[ORDERS] WHERE USER_ID = @userid AND DEPARTURE_DATETIME > @currentdate";
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[ORDERS] WHERE USER_ID = @userid AND DEPARTURE_DATETIME > @currentdate ORDER BY ORDER_NUMBER ASC";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@userid", userid));
@@ -541,7 +541,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             currentDate = DateTime.Now.ToString();
 
             // Create the query
-            query = "SELECT * FROM [SDSU_School].[4Moxie].[ORDERS] WHERE USER_ID = @userid AND DEPARTURE_DATETIME < @currentdate";
+            query = "SELECT * FROM [SDSU_School].[4Moxie].[ORDERS] WHERE USER_ID = @userid AND DEPARTURE_DATETIME < @currentdate ORDER BY ORDER_NUMBER ASC";
 
             // Populate the list of parameters
             paramList.Add(new SqlParameter("@userid", userid));
@@ -696,29 +696,158 @@ namespace ShuttleServiceManagementSystem.Utilities
             db.Database.ExecuteSqlCommand(query, parameters);
         }
 
-        public void UpdateExistingUserRole()
+        /// <summary>
+        /// This method will update the specified user's role type.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <param name="roleid"></param>
+        public void UpdateExistingUserRole(string userid, int roleid)
         {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
 
+            // Create the query
+            query = "UPDATE [SDSU_School].[4Moxie].[USER_ROLES] SET RoleId = @roleid WHERE UserId = @userid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userid));
+            paramList.Add(new SqlParameter("@roleid", roleid));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
+        }
+
+        /// <summary>
+        /// This method will get the cell carrier domain for the specified user.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public string GetUserCellCarrierDomain(string userid)
+        {
+            // Variable Declarations
+            string domain = "";
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT CARRIER_DOMAIN FROM [SDSU_School].[4Moxie].[CELL_CARRIERS] carriers, [SDSU_School].[4Moxie].[USER_INFO] userinfo WHERE userinfo.CELL_CARRIER_ID = carriers.CARRIER_ID AND USER_ID = @userid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userid));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            domain = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
+
+            return domain;
+        }
+
+        /// <summary>
+        /// This method will return true if the user has chosen to receive text message alerts, false if they have not.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public bool UserReceiveText(string userid)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT RECEIVE_TEXT FROM [SDSU_School].[4Moxie].[USER_INFO] WHERE USER_ID = @userid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userid));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            return db.Database.SqlQuery<bool>(query, parameters).FirstOrDefault<bool>();
+        }
+
+        /// <summary>
+        /// This method will return true if the user has chosen to reveive email alerts, false if they have not.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public bool UserReceiveEmail(string userid)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT RECEIVE_EMAIL FROM [SDSU_School].[4Moxie].[USER_INFO] WHERE USER_ID = @userid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userid));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            return db.Database.SqlQuery<bool>(query, parameters).FirstOrDefault<bool>();
         }
 
         /// <summary>
         /// This method will send an order confirmation email to the specified user.
         /// </summary>
         /// <param name="userid"></param>
-        public void SendOrderConfirmationEmail(string userid)
+        public void SendOrderConfirmationAlerts(string userid)
         {
             // Variable Declarations
             string recipientEmail = "";
+            string recipientText = "";
             string messageSubject = "";
             string messageBody = "";
 
             // Populate the parameters
-            recipientEmail = GetUserEmailAddress(userid);
             messageSubject = "Trip Order Confirmation";
             messageBody = "Your order has been successfully placed!";
 
-            // Send the email
-            SendEmail(recipientEmail, messageSubject, messageBody);
+            // Check if the user wants email alerts
+            if (UserReceiveEmail(userid))
+            {
+                recipientEmail = GetUserEmailAddress(userid);
+                SendEmail(recipientEmail, messageSubject, messageBody);
+            }
+
+            // Check if the user wants text alerts
+            if (UserReceiveText(userid))
+            {
+                recipientText = GetUserCellNumber(userid) + "@" + GetUserCellCarrierDomain(userid);
+                SendEmail(recipientText, messageSubject, messageBody);
+            }     
+        }
+
+        /// <summary>
+        /// This method will send the specified driver any alerts that they have chosen to receive.
+        /// </summary>
+        /// <param name="userid"></param>
+        public void SendDriverAssignmentAlerts(string userid)
+        {
+            // Variable Declarations
+            string recipientEmail = "";
+            string recipientText = "";
+            string messageSubject = "";
+            string messageBody = "";
+
+            // Populate the parameters
+            messageSubject = "New Trip Assignment";
+            messageBody = "You have been assigned a new trip to drive.";
+
+            // Check if the user wants email alerts
+            if (UserReceiveEmail(userid))
+            {
+                recipientEmail = GetUserEmailAddress(userid);
+                SendEmail(recipientEmail, messageSubject, messageBody);
+            }
+
+            // Check if the user wants text alerts
+            if (UserReceiveText(userid))
+            {
+                recipientText = GetUserCellNumber(userid) + "@" + GetUserCellCarrierDomain(userid);
+                SendEmail(recipientText, messageSubject, messageBody);
+            }     
         }
 
         /// <summary>
@@ -746,33 +875,6 @@ namespace ShuttleServiceManagementSystem.Utilities
             client.EnableSsl = true;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.Send(message);
-        }
-
-        /// <summary>
-        /// This method creates and returns a salt string used for hashing a user's password.
-        /// </summary>
-        /// <returns>string</returns>
-        public string CreatePasswordSalt()
-        {
-            var rng = new RNGCryptoServiceProvider();
-            var buff = new byte[10];
-            rng.GetBytes(buff);
-            return Convert.ToBase64String(buff);
-        }
-
-        /// <summary>
-        /// This method creats and returns a hashed string that is the result of hashing the user's password with a randomly generated salt value.
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="salt"></param>
-        /// <returns>string</returns>
-        public string CreatePasswordHash(string password, string salt)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(password + salt);
-            SHA256Managed sha256hashString = new SHA256Managed();
-            byte[] hashValue = sha256hashString.ComputeHash(bytes);
-
-            return hashValue.ToString();
         }
 
         /// <summary>
@@ -821,33 +923,54 @@ namespace ShuttleServiceManagementSystem.Utilities
             db.Database.ExecuteSqlCommand(query, parameters);
         }
 
+        /// <summary>
+        /// This method will get the specified user's cell number.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
         public string GetUserCellNumber(string userid)
         {
             // Variable Declarations
+            string query = "";
             string cellNumber = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT CELL_NUMBER FROM [SDSU_School].[4Moxie].[USER_INFO] WHERE USER_ID = @userid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userid));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            cellNumber = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
 
             return cellNumber;
         }
 
+        /// <summary>
+        /// This method will get the specified user's email address.
+        /// </summary>
+        /// <param name="userid"></param>
+        /// <returns></returns>
         public string GetUserEmailAddress(string userid)
         {
             // Variable Declarations
             string query = "";
             string emailAddress = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
 
             // Create the query
-            query = "SELECT EMAIL_ADDRESS FROM [SDSU_School].[4Moxie].[USER_INFO]";
+            query = "SELECT EMAIL_ADDRESS FROM [SDSU_School].[4Moxie].[USER_INFO] WHERE USER_ID = @userid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@userid", userid));
+            SqlParameter[] parameters = paramList.ToArray();
 
             // Execute the query
-            emailAddress = db.Database.SqlQuery<string>(query).FirstOrDefault<string>();
+            emailAddress = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
 
             return emailAddress;
         }
-
-        public void UpdateUserRole(string userid, string roleid)
-        {
-
-        }
-
     }
 }

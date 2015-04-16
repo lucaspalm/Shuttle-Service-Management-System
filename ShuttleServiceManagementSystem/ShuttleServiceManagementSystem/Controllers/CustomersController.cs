@@ -44,7 +44,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             {
                 //TempData["alert"] = "You must first add your profile information before you can create an order.";
                 return RedirectToAction("ManageProfileInfo", "Account");
-            }           
+            }
         }
 
         // POST: /Customers/CreateOrder
@@ -85,9 +85,10 @@ namespace ShuttleServiceManagementSystem.Controllers
                                         model.DepartureCity, model.DepartureState, model.DepartureZipCode, model.DestinationID.ToString(),
                                         model.NumberOfPassengers.ToString(), model.FlightDetails, model.Comments);
 
-                // Send a confirmation order to the user
-                ssms.SendOrderConfirmationEmail(userID);
+                // Send order confirmation alerts to the customer
+                ssms.SendOrderConfirmationAlerts(userID);
 
+                // Redirect the user to the home page
                 return RedirectToAction("Home");
             }
             else
@@ -101,22 +102,18 @@ namespace ShuttleServiceManagementSystem.Controllers
             return View(model);
         }
 
-        // GET: /Customers/ViewOrders
+        // GET: /Customers/ViewCurrentOrders
         [HttpGet]
-        public ActionResult ViewOrders()
+        public ActionResult ViewCurrentOrders()
         {
             // Variable Declarations
             string userID = "";
             string destination_name = "";
-            ViewOrdersViewModel tempModelObject = new ViewOrdersViewModel();
             List<ORDER> databaseOrderList = new List<ORDER>();
             List<ViewOrdersViewModel> viewModelOrderList = new List<ViewOrdersViewModel>();
 
             // Get the user id
             userID = User.Identity.GetUserId();
-
-            // Create a Current/Past/All selectlist
-            //ViewBag.ORDERS = new SelectList(db.DESTINATIONS, "DESTINATION_ID", "DESTINATION_NAME");
 
             // Get the list of user orders from the database
             databaseOrderList = ssms.GetCurrentUserOrders(userID);
@@ -124,7 +121,46 @@ namespace ShuttleServiceManagementSystem.Controllers
             // Populate the view model
             foreach (ORDER item in databaseOrderList)
             {
+                // Create a temp ViewOrdersViewModel object
+                ViewOrdersViewModel tempModelObject = new ViewOrdersViewModel();
+
                 // Fill the temp ViewOrdersViewModel object up with data
+                tempModelObject.OrderNumber = item.ORDER_NUMBER;
+                tempModelObject.OrderDate = item.DATETIME_ORDER_PLACED;
+                tempModelObject.DepartureDate = item.DEPARTURE_DATETIME;
+                destination_name = ssms.GetDestinationName(item.DESTINATION_ID.ToString());
+                tempModelObject.DestinationName = destination_name;
+
+                // Add the temp object to the view model list
+                viewModelOrderList.Add(tempModelObject);
+            }
+
+            return View(viewModelOrderList);
+        }
+
+        // GET: /Customers/ViewPastOrders
+        [HttpGet]
+        public ActionResult ViewPastOrders()
+        {
+            // Variable Declarations
+            string userID = "";
+            string destination_name = "";
+            List<ORDER> databaseOrderList = new List<ORDER>();
+            List<ViewOrdersViewModel> viewModelOrderList = new List<ViewOrdersViewModel>();
+
+            // Get the user id
+            userID = User.Identity.GetUserId();
+
+            // Get the list of user orders from the database
+            databaseOrderList = ssms.GetPastUserOrders(userID);
+
+            // Populate the view model
+            foreach (ORDER item in databaseOrderList)
+            {
+                // Create a temp ViewOrdersViewModel object
+                ViewOrdersViewModel tempModelObject = new ViewOrdersViewModel();
+
+                // Fill the temp ViewOrdersViewModel object up with data               
                 tempModelObject.OrderNumber = item.ORDER_NUMBER;
                 tempModelObject.OrderDate = item.DATETIME_ORDER_PLACED;
                 tempModelObject.DepartureDate = item.DEPARTURE_DATETIME;
@@ -171,6 +207,16 @@ namespace ShuttleServiceManagementSystem.Controllers
                 model.Comments = order.COMMENTS;
             }
 
+            // Determine if this order is a past order or not
+            if (order.DEPARTURE_DATETIME > DateTime.Now)
+            {
+                ViewBag.PastOrder = false;
+            }
+            else
+            {
+                ViewBag.PastOrder = true;
+            }
+
             return View(model);
         }
 
@@ -206,6 +252,17 @@ namespace ShuttleServiceManagementSystem.Controllers
                 model.NumberOfPassengers = order.NUMBER_OF_PASSENGERS;
                 model.FlightDetails = order.FLIGHT_DETAILS;
                 model.Comments = order.COMMENTS;
+                model.Comments = order.COMMENTS;
+
+                // Ensure that the order is not being edited < 24 hours before the departure date
+                if (DateTime.Now.AddDays(1) > order.DEPARTURE_DATETIME)
+                {
+                    ViewBag.Editable = false;
+                }
+                else
+                {
+                    ViewBag.Editable = true; 
+                }
             }
 
             return View(model);
@@ -218,9 +275,20 @@ namespace ShuttleServiceManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check if the "flight details" and "comment" fields have been left blank
+                if (model.FlightDetails == null)
+                {
+                    model.FlightDetails = "";
+                }
+
+                if (model.Comments == null)
+                {
+                    model.Comments = "";
+                }
+
                 // Update the order info
                 ssms.UpdateExistingOrderInfo(model.OrderNumber.ToString(), model.DepartureDate.ToString(), model.DepartureAddress,
-                                     model.DepartureCity, model.DepartureState, model.DepartureZipCode, model.DestinationID.ToString(), 
+                                     model.DepartureCity, model.DepartureState, model.DepartureZipCode, model.DestinationID.ToString(),
                                      model.NumberOfPassengers.ToString(), model.FlightDetails, model.Comments);
 
                 return RedirectToAction("Home");
@@ -230,18 +298,49 @@ namespace ShuttleServiceManagementSystem.Controllers
         }
 
         // GET: /Customers/DeleteOrder
-        public ActionResult Delete(int? id)
+        public ActionResult DeleteOrder(int? id)
         {
+            // Variable Declarations
+            OrderDetailsViewModel model = new OrderDetailsViewModel();
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             ORDER order = db.ORDERS.Find(id);
+
             if (order == null)
             {
                 return HttpNotFound();
             }
-            return View(order);
+            else
+            {
+                // Populate the view model
+                model.OrderNumber = order.ORDER_NUMBER;
+                model.OrderDate = order.DATETIME_ORDER_PLACED;
+                model.DepartureDate = order.DEPARTURE_DATETIME;
+                model.DepartureAddress = order.DEPARTURE_STREET_ADDRESS;
+                model.DepartureCity = order.DEPARTURE_CITY;
+                model.DepartureState = order.DEPARTURE_STATE;
+                model.DepartureZipCode = order.DEPARTURE_ZIPCODE;
+                model.DestinationName = ssms.GetDestinationName(order.DESTINATION_ID.ToString());
+                model.NumberOfPassengers = order.NUMBER_OF_PASSENGERS;
+                model.FlightDetails = order.FLIGHT_DETAILS;
+                model.Comments = order.COMMENTS;
+
+                // Ensure that the order is not being deleted < 24 hours before the departure date
+                if (DateTime.Now.AddDays(1) > order.DEPARTURE_DATETIME)
+                {
+                    ViewBag.Deletable = false;
+                }
+                else
+                {
+                    ViewBag.Deletable = true;
+                }
+            }
+
+            return View(model);
         }
 
         // POST: /Customers/DeleteOrder
@@ -252,7 +351,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             ORDER order = db.ORDERS.Find(id);
             db.ORDERS.Remove(order);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("ViewCurrentOrders");
         }
 
         protected override void Dispose(bool disposing)
@@ -263,5 +362,5 @@ namespace ShuttleServiceManagementSystem.Controllers
             }
             base.Dispose(disposing);
         }
-	}
+    }
 }

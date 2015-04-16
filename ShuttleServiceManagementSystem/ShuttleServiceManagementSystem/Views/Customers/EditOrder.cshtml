@@ -14,8 +14,7 @@
     });
 </script>
 
-<h2>ViewBag.Title</h2>
-
+<h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm())
 {
@@ -24,97 +23,108 @@
     <div class="form-horizontal">
         <h4>Order Number: @Model.OrderNumber</h4>
         <hr />
-        @Html.ValidationSummary(true)
-        <div class="form-group">
-            @Html.LabelFor(model => model.OrderNumber, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderNumber)
-                @Html.ValidationMessageFor(model => model.OrderNumber)
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DepartureDate, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.DepartureDate, new { @id = "datetimepicker" })
-                @Html.ValidationMessageFor(model => model.DepartureDate)
-            </div>
-        </div>
+        @if (ViewBag.Editable == true)
+        {
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DepartureAddress, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DepartureAddress)
-                @Html.ValidationMessageFor(model => model.DepartureAddress)
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                @Html.LabelFor(model => model.OrderNumber, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.OrderNumber)
+                    @Html.ValidationMessageFor(model => model.OrderNumber)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DepartureCity, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DepartureCity)
-                @Html.ValidationMessageFor(model => model.DepartureCity)
+            <div class="form-group">
+                @Html.LabelFor(model => model.DepartureDate, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.DepartureDate, new { @id = "datetimepicker" })
+                    @Html.ValidationMessageFor(model => model.DepartureDate)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DepartureState, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DepartureState)
-                @Html.ValidationMessageFor(model => model.DepartureState)
+            <div class="form-group">
+                @Html.LabelFor(model => model.DepartureAddress, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DepartureAddress)
+                    @Html.ValidationMessageFor(model => model.DepartureAddress)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DepartureZipCode, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DepartureZipCode)
-                @Html.ValidationMessageFor(model => model.DepartureZipCode)
+            <div class="form-group">
+                @Html.LabelFor(model => model.DepartureCity, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DepartureCity)
+                    @Html.ValidationMessageFor(model => model.DepartureCity)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DestinationID, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.DestinationID, ViewBag.DESTINATION_NAME as SelectList, "Select Destination")
-                @Html.ValidationMessageFor(model => model.DestinationID)
+            <div class="form-group">
+                @Html.LabelFor(model => model.DepartureState, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DepartureState)
+                    @Html.ValidationMessageFor(model => model.DepartureState)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.NumberOfPassengers, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.NumberOfPassengers)
-                @Html.ValidationMessageFor(model => model.NumberOfPassengers)
+            <div class="form-group">
+                @Html.LabelFor(model => model.DepartureZipCode, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DepartureZipCode)
+                    @Html.ValidationMessageFor(model => model.DepartureZipCode)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FlightDetails, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FlightDetails)
-                @Html.ValidationMessageFor(model => model.FlightDetails)
+            <div class="form-group">
+                @Html.LabelFor(model => model.DestinationID, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.DestinationID, ViewBag.DESTINATION_NAME as SelectList, "Select Destination")
+                    @Html.ValidationMessageFor(model => model.DestinationID)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Comments, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Comments)
-                @Html.ValidationMessageFor(model => model.Comments)
+            <div class="form-group">
+                @Html.LabelFor(model => model.NumberOfPassengers, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.NumberOfPassengers)
+                    @Html.ValidationMessageFor(model => model.NumberOfPassengers)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Submit Changes" class="btn btn-default" />
+            <div class="form-group">
+                @Html.LabelFor(model => model.FlightDetails, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.FlightDetails)
+                    @Html.ValidationMessageFor(model => model.FlightDetails)
+                </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Comments, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Comments)
+                    @Html.ValidationMessageFor(model => model.Comments)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Submit Changes" class="btn btn-default" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <font color="red">This order can't be edited because the departure date/time is less than 24 hours away.</font>
+            <br />
+            <br />
+        }
     </div>
 }
 
 <div>
-    @Html.ActionLink("Order List", "ViewOrders", "Customers") |
+    @Html.ActionLink("Order List", "ViewCurrentOrders", "Customers") |
     @Html.ActionLink("Customer Home", "Home", "Customers")
 </div>
 

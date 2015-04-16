@@ -190,7 +190,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             // Check if the user already has entered their profile information before
             if (ssms.CheckIfUserInfoExists(User.Identity.GetUserId()))
             {
-                ViewBag.PageInstruction = "Make your desired profile changes by editing the fields below and clicking the \"Submit\" button.";
+                ViewBag.PageInstruction = "Make your desired profile changes by editing the fields below and clicking the \"Submit\" button below.";
 
                 // Get the users current profile info
                 userInfo = ssms.GetUserProfileInfo(User.Identity.GetUserId());
@@ -212,7 +212,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             }
             else
             {
-                ViewBag.PageInstruction = "Fill in the following fields and click the \"Submit\" button below to add your profile information to your account.";
+                ViewBag.PageInstruction = "Fill in the following fields and click the \"Submit\" button below to add your personal information to your account.";
 
                 return View();
             }

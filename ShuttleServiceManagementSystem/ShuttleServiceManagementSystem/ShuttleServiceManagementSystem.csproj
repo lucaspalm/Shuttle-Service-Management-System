@@ -275,7 +275,7 @@
     <Content Include="Views\Customers\Home.cshtml" />
     <Content Include="Views\Customers\CreateOrder.cshtml" />
     <Content Include="Views\Account\ManageProfileInfo.cshtml" />
-    <Content Include="Views\Customers\ViewOrders.cshtml" />
+    <Content Include="Views\Customers\ViewCurrentOrders.cshtml" />
     <Content Include="Views\Customers\DeleteOrder.cshtml" />
     <Content Include="Views\Customers\OrderDetails.cshtml" />
     <Content Include="Views\Customers\EditOrder.cshtml" />
@@ -283,6 +283,7 @@
     <Content Include="Views\Drivers\ManageTimesheet.cshtml" />
     <Content Include="Views\Drivers\ViewSchedule.cshtml" />
     <Content Include="Views\Managers\ScheduleTrips.cshtml" />
+    <Content Include="Views\Customers\ViewPastOrders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
