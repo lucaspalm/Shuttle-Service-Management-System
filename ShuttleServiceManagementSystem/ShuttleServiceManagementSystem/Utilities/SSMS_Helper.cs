@@ -424,6 +424,27 @@ namespace ShuttleServiceManagementSystem.Utilities
         }
 
         /// <summary>
+        /// This method will delete the specified availability from the drivers timesheet table.
+        /// </summary>
+        /// <param name="availabilityID"></param>
+        public void DeleteAvailability(string availabilityID)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "DELETE FROM [SDSU_School].[4Moxie].[DRIVER_TIME_AVAILABILITIES] WHERE ID = @availabilityid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@availabilityid", availabilityID));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
+        }
+
+        /// <summary>
         /// This method will get the next available ID number that can be used for a new driver availability.
         /// </summary>
         /// <returns></returns>
@@ -465,6 +486,36 @@ namespace ShuttleServiceManagementSystem.Utilities
 
             // Execute the query
             var orderList = db.DRIVER_TIME_AVAILABILITIES.SqlQuery(query, parameters).ToList<DRIVER_TIME_AVAILABILITIES>();
+
+            // Return the list of orders
+            return orderList;
+        }
+
+        /// <summary>
+        /// This method will get a list of all of the orders that the specified driver has been assigned to drive.
+        /// </summary>
+        /// <param name="driverUserID"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        public List<ORDER> GetDriverOrders(string driverUserID, string startDate, string endDate)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "SELECT orders.ORDER_NUMBER, orders.USER_ID, orders.DATETIME_ORDER_PLACED, orders.DEPARTURE_DATETIME, orders.DEPARTURE_STREET_ADDRESS, orders.DEPARTURE_CITY, orders.DEPARTURE_STATE, orders.DEPARTURE_ZIPCODE, orders.DESTINATION_ID, orders.NUMBER_OF_PASSENGERS, orders.FLIGHT_DETAILS, orders.COMMENTS " +
+            "FROM [SDSU_School].[4Moxie].[ORDERS] orders, [SDSU_School].[4Moxie].[DRIVER_TRIP_ASSIGNMENTS] assigns WHERE orders.DEPARTURE_DATETIME > @startDate AND orders.DEPARTURE_DATETIME < @endDate AND orders.ORDER_NUMBER = assigns.ORDER_NUMBER AND assigns.DRIVER_USER_ID = @driveruserid";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@startDate", startDate));
+            paramList.Add(new SqlParameter("@endDate", endDate));
+            paramList.Add(new SqlParameter("@driveruserid", driverUserID));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            var orderList = db.ORDERS.SqlQuery(query, parameters).ToList<ORDER>();
 
             // Return the list of orders
             return orderList;
@@ -971,6 +1022,37 @@ namespace ShuttleServiceManagementSystem.Utilities
             emailAddress = db.Database.SqlQuery<string>(query, parameters).FirstOrDefault<string>();
 
             return emailAddress;
+        }
+
+        /// <summary>
+        /// This method will return a list of all the trips that the specified driver has driven in the past.
+        /// </summary>
+        /// <param name="driverUserID"></param>
+        /// <returns></returns>
+        public List<ORDER> GetDriverTripHistory(string driverUserID)
+        {
+            // Variable Declarations
+            string query = "";
+            string currentDate = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Get todays date/time
+            currentDate = DateTime.Now.ToString();
+
+            // Create the query
+            query = "SELECT orders.ORDER_NUMBER, orders.USER_ID, orders.DATETIME_ORDER_PLACED, orders.DEPARTURE_DATETIME, orders.DEPARTURE_STREET_ADDRESS, orders.DEPARTURE_CITY, orders.DEPARTURE_STATE, orders.DEPARTURE_ZIPCODE, orders.DESTINATION_ID, orders.NUMBER_OF_PASSENGERS, orders.FLIGHT_DETAILS, orders.COMMENTS " +
+            "FROM [SDSU_School].[4Moxie].[ORDERS] orders, [SDSU_School].[4Moxie].[DRIVER_TRIP_ASSIGNMENTS] assigns WHERE orders.ORDER_NUMBER = assigns.ORDER_NUMBER AND assigns.DRIVER_USER_ID = @driveruserid AND orders.DEPARTURE_DATETIME < @currentdate";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@driveruserid", driverUserID));
+            paramList.Add(new SqlParameter("@currentdate", currentDate));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            var orderList = db.ORDERS.SqlQuery(query, parameters).ToList<ORDER>();
+
+            // Return the list of orders
+            return orderList;
         }
     }
 }

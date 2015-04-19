@@ -63,7 +63,7 @@ namespace ShuttleServiceManagementSystem.Controllers
                     assigned = true;
                 }
 
-                // Check if the order has already occured
+                // Assign a color to the order event based on whether or not the order has already ocurred
                 if (DateTime.Now > order.DEPARTURE_DATETIME)
                 {
                     newObject.color = "gray";

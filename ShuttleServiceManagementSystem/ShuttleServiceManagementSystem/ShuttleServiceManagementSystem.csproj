@@ -284,6 +284,8 @@
     <Content Include="Views\Drivers\ViewSchedule.cshtml" />
     <Content Include="Views\Managers\ScheduleTrips.cshtml" />
     <Content Include="Views\Customers\ViewPastOrders.cshtml" />
+    <Content Include="Views\Drivers\ViewDrivingHistory.cshtml" />
+    <Content Include="Views\Drivers\OrderDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
