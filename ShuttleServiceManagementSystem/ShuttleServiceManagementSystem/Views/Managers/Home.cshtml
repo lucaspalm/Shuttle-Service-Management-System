@@ -13,11 +13,20 @@
 </div>
 <div class="row">
     <div class="col-md-6">
+        <h2>Driver List and Timesheets</h2>
+        <p>
+            View a list of all registered drivers along with their timesheets of availability.
+        </p>
+        <p>@Html.ActionLink("View Driver List", "ViewDriverList", "Managers", null, new { @class = "btn btn-default" })</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
         <h2>Manage User Accounts</h2>
         <p>
-            Promote, demote, and remove user accounts.
+            Assign new roles to users and view their account activity.
         </p>
-        <p>@Html.ActionLink("Manage Accounts", "", "", null, new { @class = "btn btn-default" })</p>
+        <p>@Html.ActionLink("Manage Accounts", "ManageUserAccounts", "Managers", null, new { @class = "btn btn-default" })</p>
     </div>
 </div>
 

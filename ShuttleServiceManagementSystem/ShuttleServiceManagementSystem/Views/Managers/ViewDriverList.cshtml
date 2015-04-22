@@ -1,0 +1,29 @@
+﻿@model IEnumerable<ShuttleServiceManagementSystem.Models.DriverListViewModel>
+
+@{
+    ViewBag.Title = "Driver List";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.userName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.userName)
+        </td>
+        <td>
+            @Html.ActionLink("View Timesheet", "ViewDriverTimesheet", new {  userID=item.userID  }) |
+            @Html.ActionLink("View Driving Schedule", "ViewDriverSchedule", new { userID = item.userID })
+        </td>
+    </tr>
+}
+
+</table>

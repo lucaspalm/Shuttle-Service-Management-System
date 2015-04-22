@@ -35,6 +35,215 @@ namespace ShuttleServiceManagementSystem.Controllers
             return View();
         }
 
+        //
+        // GET: /Managers/ManageUserAccounts
+        public ActionResult ManageUserAccounts()
+        {
+            // Variable Declarations
+            List<ManageUserAccountsViewModel> model = new List<ManageUserAccountsViewModel>();
+
+            // Populate the view model
+            model = ssms.GetUserAccountInfo();
+
+            return View(model);
+        }
+
+        //
+        // GET: /Managers/EditUserRole
+        public ActionResult EditUserRole(string userID)
+        {
+            // Variable Declarations
+            EditUserRoleViewModel model = new EditUserRoleViewModel();
+
+            if (userID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                // Create a selectlist of destinations to be passed to the view
+                ViewBag.USER_ROLE = new SelectList(db.SYSTEM_ROLES, "Id", "Name", ssms.GetUserRole(userID.ToString()));
+
+                ViewBag.UserName = ssms.GetUserName(userID.ToString());
+
+                // Populate the view model
+                model.userID = userID.ToString();
+                model.userRoleID = ssms.GetUserRole(userID.ToString());
+            }
+
+            return View(model);
+        }
+
+        //
+        // GET: /Managers/ViewAccountActivity
+        public ActionResult ViewAccountActivity(string userID)
+        {
+            // Variable Declarations
+            List<AccountActivityViewModel> model = new List<AccountActivityViewModel>();
+            List<DateTime> accountActivityList = new List<DateTime>();
+
+            if (userID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                ViewBag.UserName = ssms.GetUserName(userID);
+
+                accountActivityList = ssms.GetUserLogInHistory(userID);
+
+                foreach (DateTime item in accountActivityList)
+                {
+                    // Create a new object
+                    AccountActivityViewModel newObject = new AccountActivityViewModel();
+
+                    newObject.loginDateTime = item.ToString();
+
+                    model.Add(newObject);
+                }
+            }
+
+            return View(model);
+        }
+
+        //
+        // GET: /Managers/ViewDriverList
+        public ActionResult ViewDriverList()
+        {
+            // Variable Declarations
+            List<DriverListViewModel> model = new List<DriverListViewModel>();
+
+            // Populate the view model
+            model = ssms.GetDriverList();
+
+            return View(model);
+        }
+
+        //
+        // GET: /Managers/ViewDriverTimesheet
+        public ActionResult ViewDriverTimesheet(string userID)
+        {
+            if (userID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                ViewBag.UserID = userID;
+                ViewBag.UserName = ssms.GetUserName(userID);
+            }
+            
+            return View();
+        }
+
+        //
+        // GET: /Managers/ViewDriverSchedule
+        public ActionResult ViewDriverSchedule(string userID)
+        {
+            if (userID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            else
+            {
+                ViewBag.UserID = userID;
+                ViewBag.UserName = ssms.GetUserName(userID);
+            }
+
+            return View();
+        }
+
+        // POST: /Managers/GetDriverTimesheet
+        public JsonResult GetDriverTimesheet(string start, string end, string driverUserID)
+        {
+            // Variable Declarations
+            List<CalendarEventObject> eventListToSend = new List<CalendarEventObject>();
+
+            // Get the list of timesheet events for the current user/driver
+            var timesheetEvents = ssms.GetDriverTimesheet(driverUserID, start, end);
+
+            // Convert the event list into a format that can be correctly read by the calendar plugin
+            foreach (DRIVER_TIME_AVAILABILITIES avails in timesheetEvents)
+            {
+                // Create a new calendar event object
+                CalendarEventObject newObject = new CalendarEventObject();
+
+                // Assign the corresponding order values to the event object
+                newObject.id = avails.ID;
+                newObject.title = "";
+                newObject.start = avails.DATE.Add(avails.START_TIME).ToString("s");
+                newObject.end = avails.DATE.Add(avails.END_TIME).ToString("s");
+                newObject.color = "#008CBA";
+
+                // Add the new event object into the events list to send to the calendar plugin
+                eventListToSend.Add(newObject);
+            }
+
+            // Convert the event list to an array
+            var rows = eventListToSend.ToArray();
+
+            // Return the JSON list data to the calendar
+            return Json(rows, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /Managers/GetDriverSchedule
+        public JsonResult GetDriverSchedule(string start, string end, string driverUserID)
+        {
+            // Variable Declarations
+            List<CalendarEventObject> eventListToSend = new List<CalendarEventObject>();
+
+            // Get the list of timesheet events for the current user/driver
+            var driverOrders = ssms.GetDriverOrders(driverUserID, start, end);
+
+            // Convert the event list into a format that can be correctly read by the calendar plugin
+            foreach (ORDER order in driverOrders)
+            {
+                // Create a new calendar event object
+                CalendarEventObject newObject = new CalendarEventObject();
+
+                // Assign the corresponding order values to the event object
+                newObject.id = order.ORDER_NUMBER;
+                newObject.title = "Order #: " + order.ORDER_NUMBER;
+                newObject.start = order.DEPARTURE_DATETIME.ToString();
+                newObject.end = "";
+
+                // Assign a color to the order event based on whether or not the order has already ocurred
+                if (DateTime.Now > order.DEPARTURE_DATETIME)
+                {
+                    newObject.color = "gray";
+                }
+                else
+                {
+                    newObject.color = "#008CBA";
+                }
+
+                // Add the new event object into the events list to send to the calendar plugin
+                eventListToSend.Add(newObject);
+            }
+
+            // Convert the event list to an array
+            var rows = eventListToSend.ToArray();
+
+            // Return the JSON list data to the calendar
+            return Json(rows, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /Managers/EditUserRole
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditUserRole(EditUserRoleViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Update the user's role
+                ssms.UpdateExistingUserRole(model.userID, model.userRoleID);
+
+                return RedirectToAction("ManageUserAccounts");
+            }
+
+            return View(model);
+        }
+
         // GET: /Managers/GetTripOrders
         public JsonResult GetTripOrders(string start, string end)
         {
@@ -138,9 +347,10 @@ namespace ShuttleServiceManagementSystem.Controllers
                 // Check if the order has been assigned a driver yet
                 if (ssms.GetAssignedDriverForOrder(orderNumber) != "" && ssms.GetAssignedDriverForOrder(orderNumber) != null)
                 {
-                    // Move the assigned driver entry to the first position in the list
+                    // Loop through the list of drivers
                     for (i = 0; i < driverListToSend.Count; i++)
                     {
+                        // Look for the assigned driver in the list and move it to index 0
                         if (driverListToSend[i].value == ssms.GetAssignedDriverForOrder(orderNumber))
                         {
                             // Create a new driver drop down list object
@@ -217,7 +427,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /Drivers/SaveDriverAssignment
+        // POST: /Managers/SaveDriverAssignment
         [HttpPost]
         public bool SaveDriverAssignment(string OrderNumber, string DriverID)
         {

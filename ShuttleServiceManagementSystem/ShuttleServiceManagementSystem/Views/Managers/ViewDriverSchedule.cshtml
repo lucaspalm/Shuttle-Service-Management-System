@@ -1,0 +1,33 @@
+﻿<link href="~/Content/fullcalendar.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.11.3.min.js"></script>
+<script src="~/Scripts/fullcalendar.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#calendar").fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            defaultView: 'month',
+            allDaySlot: false,
+            events: {
+                url: '@Url.Action("GetDriverSchedule", "Managers")',
+                type: 'GET',
+                data: {
+                    driverUserID: '@ViewBag.UserID'
+                },
+                error: function() {
+                    alert('There was an error while fetching the driver\'s schedule.');
+                }
+            }
+        });
+    });
+</script>
+
+<h2>Driving Schedule - <b>@ViewBag.UserName</b></h2>
+<hr />
+<div id="calendar"></div>
+

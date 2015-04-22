@@ -164,6 +164,7 @@
     <Compile Include="Controllers\DriversController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManagersController.cs" />
+    <Compile Include="Models\ManagerViewModels.cs" />
     <Compile Include="Models\OrderViewModels.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -286,6 +287,12 @@
     <Content Include="Views\Customers\ViewPastOrders.cshtml" />
     <Content Include="Views\Drivers\ViewDrivingHistory.cshtml" />
     <Content Include="Views\Drivers\OrderDetails.cshtml" />
+    <Content Include="Views\Managers\ManageUserAccounts.cshtml" />
+    <Content Include="Views\Managers\EditUserRole.cshtml" />
+    <Content Include="Views\Managers\ViewAccountActivity.cshtml" />
+    <Content Include="Views\Managers\ViewDriverList.cshtml" />
+    <Content Include="Views\Managers\ViewDriverTimesheet.cshtml" />
+    <Content Include="Views\Managers\ViewDriverSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

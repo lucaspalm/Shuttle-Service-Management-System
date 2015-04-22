@@ -120,7 +120,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             return View(model);
         }
 
-        // GET: /Drivers/GetDriverTimesheet
+        // GET: /Drivers/GetDriverOrders
         public JsonResult GetDriverOrders(string start, string end)
         {
             // Variable Declarations
@@ -230,13 +230,13 @@ namespace ShuttleServiceManagementSystem.Controllers
             return true;
         }
 
-        // POST: /Drivers/SaveNewAvailability
+        // POST: /Drivers/DeleteAvailability
         [HttpPost]
         public bool DeleteAvailability(string AvailabilityID)
         {
             try
             {
-                // Insert the new driver availability into the database
+                // Delete the selected availability
                 ssms.DeleteAvailability(AvailabilityID);
             }
             catch

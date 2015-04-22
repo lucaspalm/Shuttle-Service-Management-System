@@ -252,7 +252,6 @@ namespace ShuttleServiceManagementSystem.Controllers
                 model.NumberOfPassengers = order.NUMBER_OF_PASSENGERS;
                 model.FlightDetails = order.FLIGHT_DETAILS;
                 model.Comments = order.COMMENTS;
-                model.Comments = order.COMMENTS;
 
                 // Ensure that the order is not being edited < 24 hours before the departure date
                 if (DateTime.Now.AddDays(1) > order.DEPARTURE_DATETIME)
