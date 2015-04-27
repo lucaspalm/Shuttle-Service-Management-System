@@ -293,6 +293,7 @@
     <Content Include="Views\Managers\ViewDriverList.cshtml" />
     <Content Include="Views\Managers\ViewDriverTimesheet.cshtml" />
     <Content Include="Views\Managers\ViewDriverSchedule.cshtml" />
+    <Content Include="Views\Managers\SetDriverHourlyRate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

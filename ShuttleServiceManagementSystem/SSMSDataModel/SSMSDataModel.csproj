@@ -91,6 +91,9 @@
     <Compile Include="DAL\SYSTEM_ROLES.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DAL\SYSTEM_VARIABLES.cs">
+      <DependentUpon>SSMS_DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DAL\USER_ACCOUNTS.cs">
       <DependentUpon>SSMS_DataModel.tt</DependentUpon>
     </Compile>

@@ -38,4 +38,10 @@ namespace ShuttleServiceManagementSystem.Models
         [Display(Name = "Driver Username")]
         public string userName { get; set; }
     }
+
+    public class DriverHourlyRateViewModel
+    {
+        [Display(Name = "Hourly Rate")]
+        public double hourlylRate { get; set; }
+    }
 }

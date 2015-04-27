@@ -39,5 +39,6 @@ namespace SSMSDataModel.DAL
         public virtual DbSet<USER_LOGINS> USER_LOGINS { get; set; }
         public virtual DbSet<USER_ROLES> USER_ROLES { get; set; }
         public virtual DbSet<USER_CLAIMS> USER_CLAIMS { get; set; }
+        public virtual DbSet<SYSTEM_VARIABLES> SYSTEM_VARIABLES { get; set; }
     }
 }

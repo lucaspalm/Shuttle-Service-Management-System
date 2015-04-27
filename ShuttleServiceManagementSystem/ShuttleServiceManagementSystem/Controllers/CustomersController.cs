@@ -350,6 +350,10 @@ namespace ShuttleServiceManagementSystem.Controllers
             ORDER order = db.ORDERS.Find(id);
             db.ORDERS.Remove(order);
             db.SaveChanges();
+
+            // Delete the driver trip assignment (if it exists)
+
+
             return RedirectToAction("ViewCurrentOrders");
         }
 

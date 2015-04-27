@@ -73,6 +73,13 @@
           <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
+        <EntityType Name="SYSTEM_VARIABLES">
+          <Key>
+            <PropertyRef Name="VARIABLE" />
+          </Key>
+          <Property Name="VARIABLE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="VALUE" Type="float" />
+        </EntityType>
         <EntityType Name="USER_ACCOUNTS">
           <Key>
             <PropertyRef Name="USER_ID" />
@@ -90,7 +97,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ClaimType" Type="nvarchar(max)" />
           <Property Name="ClaimValue" Type="nvarchar(max)" />
-          <Property Name="User_Id" Type="nvarchar(max)" />
+          <Property Name="User_Id" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="USER_INFO">
           <Key>
@@ -147,6 +154,18 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <Association Name="FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_IdentityUser_Id">
+          <End Role="USER_ACCOUNTS" Type="Self.USER_ACCOUNTS" Multiplicity="0..1" />
+          <End Role="USER_CLAIMS" Type="Self.USER_CLAIMS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="USER_CLAIMS">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_4Moxie_USER_ROLES_4Moxie_SYSTEM_ROLES_RoleId">
           <End Role="SYSTEM_ROLES" Type="Self.SYSTEM_ROLES" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -169,6 +188,7 @@
           <EntitySet Name="ORDERS" EntityType="Self.ORDERS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="SYSTEM_LOGS" EntityType="Self.SYSTEM_LOGS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="SYSTEM_ROLES" EntityType="Self.SYSTEM_ROLES" Schema="4Moxie" store:Type="Tables" />
+          <EntitySet Name="SYSTEM_VARIABLES" EntityType="Self.SYSTEM_VARIABLES" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="USER_ACCOUNTS" EntityType="Self.USER_ACCOUNTS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="USER_CLAIMS" EntityType="Self.USER_CLAIMS" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="USER_INFO" EntityType="Self.USER_INFO" Schema="4Moxie" store:Type="Tables" />
@@ -176,6 +196,10 @@
           <EntitySet Name="USER_ROLES" EntityType="Self.USER_ROLES" Schema="4Moxie" store:Type="Tables" />
           <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_IdentityUser_Id" Association="Self.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_IdentityUser_Id">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="USER_CLAIMS" EntitySet="USER_CLAIMS" />
+          </AssociationSet>
           <AssociationSet Name="FK_4Moxie_USER_ROLES_4Moxie_SYSTEM_ROLES_RoleId" Association="Self.FK_4Moxie_USER_ROLES_4Moxie_SYSTEM_ROLES_RoleId">
             <End Role="SYSTEM_ROLES" EntitySet="SYSTEM_ROLES" />
             <End Role="USER_ROLES" EntitySet="USER_ROLES" />
@@ -303,6 +327,11 @@
             <End Role="USER_ROLES" EntitySet="USER_ROLES" />
           </AssociationSet>
           <EntitySet Name="USER_CLAIMS" EntityType="SDSU_SchoolModel.USER_CLAIMS" />
+          <AssociationSet Name="FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_IdentityUser_Id" Association="SDSU_SchoolModel.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_IdentityUser_Id">
+            <End Role="USER_ACCOUNTS" EntitySet="USER_ACCOUNTS" />
+            <End Role="USER_CLAIMS" EntitySet="USER_CLAIMS" />
+          </AssociationSet>
+          <EntitySet Name="SYSTEM_VARIABLES" EntityType="SDSU_SchoolModel.SYSTEM_VARIABLES" />
           </EntityContainer>
         <EntityType Name="DRIVER_TRIP_ASSIGNMENTS">
           <Key>
@@ -320,6 +349,7 @@
           <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Discriminator" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="USER_CLAIMS" Relationship="SDSU_SchoolModel.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_IdentityUser_Id" FromRole="USER_ACCOUNTS" ToRole="USER_CLAIMS" />
         </EntityType>
         <EntityType Name="USER_LOGINS">
           <Key>
@@ -361,7 +391,27 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="User_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="User_Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="USER_ACCOUNTS" Relationship="SDSU_SchoolModel.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_IdentityUser_Id" FromRole="USER_CLAIMS" ToRole="USER_ACCOUNTS" />
+        </EntityType>
+        <Association Name="FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_IdentityUser_Id">
+          <End Type="SDSU_SchoolModel.USER_ACCOUNTS" Role="USER_ACCOUNTS" Multiplicity="0..1" />
+          <End Type="SDSU_SchoolModel.USER_CLAIMS" Role="USER_CLAIMS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER_ACCOUNTS">
+              <PropertyRef Name="USER_ID" />
+            </Principal>
+            <Dependent Role="USER_CLAIMS">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SYSTEM_VARIABLES">
+          <Key>
+            <PropertyRef Name="VARIABLE" />
+          </Key>
+          <Property Name="VARIABLE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="VALUE" Type="Double" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -517,6 +567,14 @@
                 <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
                 <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYSTEM_VARIABLES">
+            <EntityTypeMapping TypeName="SDSU_SchoolModel.SYSTEM_VARIABLES">
+              <MappingFragment StoreEntitySet="SYSTEM_VARIABLES">
+                <ScalarProperty Name="VALUE" ColumnName="VALUE" />
+                <ScalarProperty Name="VARIABLE" ColumnName="VARIABLE" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

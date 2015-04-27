@@ -153,6 +153,35 @@ namespace ShuttleServiceManagementSystem.Controllers
             return View();
         }
 
+        //
+        // GET: /Managers/SetDriverHourlyRate
+        public ActionResult SetDriverHourlyRate()
+        {
+            // Variable Declarations
+            DriverHourlyRateViewModel model = new DriverHourlyRateViewModel();
+
+            // Get the current driver hourly rate
+            model.hourlylRate = ssms.GetDriverHourlyRate();
+
+            return View(model);
+        }
+
+        //
+        // POST: /Managers/SetDriverHourlyRate
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SetDriverHourlyRate(DriverHourlyRateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Update the user's role
+                ssms.SetDriverHourlyRate(model.hourlylRate);
+            }
+
+            return View(model);
+        }
+
+        //
         // POST: /Managers/GetDriverTimesheet
         public JsonResult GetDriverTimesheet(string start, string end, string driverUserID)
         {
@@ -186,6 +215,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
         }
 
+        //
         // GET: /Managers/GetDriverSchedule
         public JsonResult GetDriverSchedule(string start, string end, string driverUserID)
         {
@@ -228,6 +258,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
         }
 
+        //
         // POST: /Managers/EditUserRole
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -244,6 +275,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             return View(model);
         }
 
+        //
         // GET: /Managers/GetTripOrders
         public JsonResult GetTripOrders(string start, string end)
         {
@@ -311,6 +343,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
         }
 
+        //
         // GET: /Managers/GetAllAvailableOrderDrivers
         public JsonResult GetAllAvailableOrderDrivers(string orderNumber)
         {
@@ -380,6 +413,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
         }
 
+        //
         // GET: /Managers/GetAllOrderInfo
         public JsonResult GetAllOrderInfo(string orderNumber)
         {
@@ -427,6 +461,7 @@ namespace ShuttleServiceManagementSystem.Controllers
             return Json(rows, JsonRequestBehavior.AllowGet);
         }
 
+        //
         // POST: /Managers/SaveDriverAssignment
         [HttpPost]
         public bool SaveDriverAssignment(string OrderNumber, string DriverID)

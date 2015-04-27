@@ -14,10 +14,17 @@ namespace SSMSDataModel.DAL
     
     public partial class USER_ACCOUNTS
     {
+        public USER_ACCOUNTS()
+        {
+            this.USER_CLAIMS = new HashSet<USER_CLAIMS>();
+        }
+    
         public string USER_ID { get; set; }
         public string UserName { get; set; }
         public string PasswordHash { get; set; }
         public string SecurityStamp { get; set; }
         public string Discriminator { get; set; }
+    
+        public virtual ICollection<USER_CLAIMS> USER_CLAIMS { get; set; }
     }
 }

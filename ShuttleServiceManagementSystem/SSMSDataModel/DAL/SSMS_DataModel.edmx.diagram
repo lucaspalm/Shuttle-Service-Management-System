@@ -20,6 +20,8 @@
         <EntityTypeShape EntityType="SDSU_SchoolModel.USER_ROLES" Width="1.5" PointX="3" PointY="2.5" />
         <AssociationConnector Association="SDSU_SchoolModel.FK_4Moxie_USER_ROLES_4Moxie_SYSTEM_ROLES_RoleId" />
         <EntityTypeShape EntityType="SDSU_SchoolModel.USER_CLAIMS" Width="1.5" PointX="3.375" PointY="9.75" />
+        <AssociationConnector Association="SDSU_SchoolModel.FK_4Moxie_USER_CLAIMS_4Moxie_USER_ACCOUNTS_IdentityUser_Id" />
+        <EntityTypeShape EntityType="SDSU_SchoolModel.SYSTEM_VARIABLES" Width="1.5" PointX="5.375" PointY="11.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

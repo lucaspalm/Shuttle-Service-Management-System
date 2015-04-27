@@ -663,7 +663,7 @@ namespace ShuttleServiceManagementSystem.Utilities
             string query = "";
 
             // Create the query
-            query = "SELECT user_accounts.USER_ID AS userID, user_accounts.USERNAME AS userName FROM [SDSU_School].[4Moxie].[USER_ACCOUNTS] user_accounts, [SDSU_School].[4Moxie].[USER_ROLES] user_roles WHERE user_accounts.USER_ID = user_roles.UserId AND user_roles.RoleId = 2";
+            query = "SELECT user_accounts.USER_ID AS userID, user_accounts.USERNAME AS userName FROM [SDSU_School].[4Moxie].[USER_ACCOUNTS] user_accounts, [SDSU_School].[4Moxie].[USER_ROLES] user_roles WHERE user_accounts.USER_ID = user_roles.UserId AND user_roles.RoleId = 2 ORDER BY user_accounts.UserName ASC";
 
             // Execute the query
             var driverList = db.Database.SqlQuery<DriverListViewModel>(query).ToList();
@@ -1131,13 +1131,53 @@ namespace ShuttleServiceManagementSystem.Utilities
             string query = "";
 
             // Create the query
-            query = "SELECT user_accounts.USER_ID AS userID, user_accounts.UserName AS userName, system_roles.name AS userRole FROM [SDSU_School].[4Moxie].[USER_ACCOUNTS] user_accounts, [SDSU_School].[4Moxie].[SYSTEM_ROLES] system_roles, [SDSU_School].[4Moxie].[USER_ROLES] user_roles WHERE user_accounts.USER_ID = user_roles.userID AND user_roles.RoleId = system_roles.Id ORDER BY system_Roles.Id";
+            query = "SELECT user_accounts.USER_ID AS userID, user_accounts.UserName AS userName, system_roles.name AS userRole FROM [SDSU_School].[4Moxie].[USER_ACCOUNTS] user_accounts, [SDSU_School].[4Moxie].[SYSTEM_ROLES] system_roles, [SDSU_School].[4Moxie].[USER_ROLES] user_roles WHERE user_accounts.USER_ID = user_roles.userID AND user_roles.RoleId = system_roles.Id ORDER BY system_Roles.Id ASC, user_accounts.UserName ASC";
 
             // Execute the query
             var userList = db.Database.SqlQuery<ManageUserAccountsViewModel>(query).ToList();
 
             // Return the list of orders
             return userList;
+        }
+
+        /// <summary>
+        /// This method will get the value of the DriverHourlyRate system variable.
+        /// </summary>
+        /// <returns></returns>
+        public double GetDriverHourlyRate()
+        {
+            // Variable Declarations
+            string query = "";
+            double hourlyRate = 0.0;
+
+            // Create the query
+            query = "SELECT VALUE FROM [SDSU_School].[4Moxie].[SYSTEM_VARIABLES] WHERE VARIABLE = 'DriverHourlyRate'";
+
+            // Execute the query
+            hourlyRate = db.Database.SqlQuery<double>(query).FirstOrDefault<double>();
+
+            return hourlyRate;
+        }
+
+        /// <summary>
+        /// This method will set the DriverHourlyRate system variable.
+        /// </summary>
+        /// <param name="rateValue"></param>
+        public void SetDriverHourlyRate(double rateValue)
+        {
+            // Variable Declarations
+            string query = "";
+            List<SqlParameter> paramList = new List<SqlParameter>();
+
+            // Create the query
+            query = "UPDATE [SDSU_School].[4Moxie].[SYSTEM_VARIABLES] SET VALUE = @hourlyrate WHERE VARIABLE = 'DriverHourlyRate'";
+
+            // Populate the list of parameters
+            paramList.Add(new SqlParameter("@hourlyrate", rateValue));
+            SqlParameter[] parameters = paramList.ToArray();
+
+            // Execute the query
+            db.Database.ExecuteSqlCommand(query, parameters);
         }
     }
 }

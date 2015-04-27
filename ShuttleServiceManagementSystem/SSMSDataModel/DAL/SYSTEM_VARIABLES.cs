@@ -12,13 +12,9 @@ namespace SSMSDataModel.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class USER_CLAIMS
+    public partial class SYSTEM_VARIABLES
     {
-        public int Id { get; set; }
-        public string ClaimType { get; set; }
-        public string ClaimValue { get; set; }
-        public string User_Id { get; set; }
-    
-        public virtual USER_ACCOUNTS USER_ACCOUNTS { get; set; }
+        public string VARIABLE { get; set; }
+        public Nullable<double> VALUE { get; set; }
     }
 }
