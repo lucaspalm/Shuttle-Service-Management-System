@@ -4,7 +4,7 @@
     ViewBag.Title = "Edit User Role";
 }
 
-<h2>@ViewBag.Title - @ViewBag.UserName</h2>
+<h2>@ViewBag.Title - <b>@ViewBag.UserName</b></h2>
 
 @using (Html.BeginForm())
 {
@@ -32,6 +32,6 @@
 }
 
 <div>
-    @Html.ActionLink("Account List", "ManageUserAccounts")
+    @Html.ActionLink("Account List", "ManageUserAccounts") | 
     @Html.ActionLink("Manager Home", "Home", "Managers")
 </div>

@@ -464,6 +464,7 @@ namespace ShuttleServiceManagementSystem.Controllers
         //
         // POST: /Managers/SaveDriverAssignment
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public bool SaveDriverAssignment(string OrderNumber, string DriverID)
         {
             try
